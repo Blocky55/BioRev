@@ -18,15 +18,21 @@ export function BackToTop() {
     <AnimatePresence>
       {show && (
         <motion.button
-          initial={{ opacity: 0, scale: 0.5 }}
+          initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.5 }}
-          whileHover={{ scale: 1.1, y: -2 }}
-          whileTap={{ scale: 0.9 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          whileHover={{ scale: 1.05, y: -1 }}
+          whileTap={{ scale: 0.95 }}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="fixed bottom-6 right-6 z-40 font-pixel text-[10px] px-3 py-2 bg-navy-light border border-neon-green/50 text-neon-green hover:bg-neon-green/10 transition-colors"
+          className="fixed bottom-6 right-6 z-40 w-10 h-10 flex items-center justify-center
+            bg-surface rounded-xl border border-border shadow-figma
+            text-text-secondary hover:text-accent hover:border-accent/30 hover:shadow-figma-md
+            transition-all duration-200"
+          aria-label="Back to top"
         >
-          ▲ TOP
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 12V4M8 4L4 8M8 4l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </motion.button>
       )}
     </AnimatePresence>

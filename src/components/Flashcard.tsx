@@ -10,7 +10,7 @@ interface FlashcardProps {
 }
 
 function ConfettiEffect() {
-  const colors = ["#39ff14", "#ff2d78", "#ffb800", "#00ffff", "#ff6b00"];
+  const colors = ["#7B61FF", "#14AE5C", "#F24822", "#FFCD29", "#6B4EE6"];
   const particles = Array.from({ length: 50 }, (_, i) => ({
     id: i,
     x: Math.random() * 100,
@@ -24,7 +24,7 @@ function ConfettiEffect() {
       {particles.map((p) => (
         <div
           key={p.id}
-          className="absolute confetti-particle"
+          className="absolute confetti-particle rounded-sm"
           style={{
             left: `${p.x}%`,
             top: 0,
@@ -141,20 +141,23 @@ export function Flashcard({ topic }: FlashcardProps) {
         className="flex flex-col items-center justify-center py-16"
       >
         {showConfetti && <ConfettiEffect />}
-        <div className="text-6xl mb-6">🏆</div>
-        <h3 className="font-pixel text-neon-green text-sm mb-4 text-glow-green">
-          DECK COMPLETE!
+        <div className="w-16 h-16 bg-accent-light rounded-2xl flex items-center justify-center mb-6">
+          <span className="text-3xl">🏆</span>
+        </div>
+        <h3 className="text-xl font-semibold text-text-primary mb-2">
+          Deck Complete!
         </h3>
-        <p className="text-gray-300 text-center mb-6">
+        <p className="text-text-secondary text-sm text-center mb-8 max-w-sm">
           You&apos;ve mastered all {totalCards} flashcards in this topic!
         </p>
         <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={handleReset}
-          className="font-pixel text-[10px] px-6 py-3 bg-hot-pink/20 text-hot-pink pixel-border-pink"
+          className="px-5 py-2.5 bg-surface text-danger text-sm font-medium rounded-lg
+            border border-danger/20 hover:bg-danger-light transition-colors"
         >
-          RESET & STUDY AGAIN
+          Reset & study again
         </motion.button>
       </motion.div>
     );
@@ -162,9 +165,14 @@ export function Flashcard({ topic }: FlashcardProps) {
 
   if (!currentCard) {
     return (
-      <div className="text-center py-16 text-gray-400">
-        <p>No cards remaining!</p>
-        <button onClick={handleReset} className="mt-4 text-neon-green underline">Reset deck</button>
+      <div className="text-center py-16">
+        <p className="text-text-muted text-sm">No cards remaining!</p>
+        <button
+          onClick={handleReset}
+          className="mt-4 text-sm text-accent hover:text-accent-hover underline underline-offset-2 transition-colors"
+        >
+          Reset deck
+        </button>
       </div>
     );
   }
@@ -178,18 +186,18 @@ export function Flashcard({ topic }: FlashcardProps) {
       {showConfetti && <ConfettiEffect />}
 
       {/* Progress bar */}
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-2">
-          <span className="font-pixel text-[10px] text-neon-green">
-            {knownCount}/{totalCards} KNOWN
+      <div className="mb-8">
+        <div className="flex justify-between items-center mb-2.5">
+          <span className="text-[13px] font-medium text-accent">
+            {knownCount}/{totalCards} mastered
           </span>
-          <span className="text-xs text-gray-500">
+          <span className="text-[13px] text-text-muted">
             Card {currentIndex + 1} of {remainingCards.length} remaining
           </span>
         </div>
-        <div className="h-2 bg-navy-lighter rounded-full overflow-hidden pixel-border-subtle">
+        <div className="h-2 bg-surface-secondary rounded-full overflow-hidden">
           <motion.div
-            className="h-full bg-gradient-to-r from-neon-green to-neon-green/70"
+            className="h-full bg-accent rounded-full"
             initial={{ width: 0 }}
             animate={{ width: `${(knownCount / totalCards) * 100}%` }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}
@@ -204,20 +212,26 @@ export function Flashcard({ topic }: FlashcardProps) {
       >
         <div className={`card-3d-inner relative w-full min-h-[280px] ${isFlipped ? "flipped" : ""}`}>
           {/* Front */}
-          <div className="card-3d-front absolute inset-0 p-8 bg-navy-lighter pixel-border rounded flex flex-col items-center justify-center">
-            <span className="font-pixel text-[10px] text-hot-pink mb-4">QUESTION</span>
-            <p className="text-lg text-center text-gray-100 leading-relaxed">
+          <div className="card-3d-front absolute inset-0 p-8 bg-surface rounded-2xl border border-border shadow-figma-md
+            flex flex-col items-center justify-center">
+            <span className="text-[11px] font-semibold text-accent uppercase tracking-wider mb-4">
+              Question
+            </span>
+            <p className="text-lg text-center text-text-primary leading-relaxed">
               {currentCard.front}
             </p>
-            <span className="font-pixel text-[8px] text-gray-600 mt-6">
-              CLICK TO FLIP
+            <span className="text-[11px] text-text-muted mt-6">
+              Click to flip
             </span>
           </div>
 
           {/* Back */}
-          <div className="card-3d-back absolute inset-0 p-8 bg-navy-lighter pixel-border-pink rounded flex flex-col items-center justify-center">
-            <span className="font-pixel text-[10px] text-neon-green mb-4">ANSWER</span>
-            <p className="text-lg text-center text-gray-100 leading-relaxed">
+          <div className="card-3d-back absolute inset-0 p-8 bg-accent-light rounded-2xl border border-accent/20 shadow-figma-md
+            flex flex-col items-center justify-center">
+            <span className="text-[11px] font-semibold text-accent uppercase tracking-wider mb-4">
+              Answer
+            </span>
+            <p className="text-lg text-center text-text-primary leading-relaxed">
               {currentCard.back}
             </p>
           </div>
@@ -227,51 +241,57 @@ export function Flashcard({ topic }: FlashcardProps) {
       {/* Controls */}
       <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
         <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={handlePrev}
-          className="font-pixel text-[10px] px-4 py-2 bg-navy-lighter border border-gray-700 text-gray-300 hover:border-neon-green/50 transition-colors"
+          className="px-4 py-2.5 text-[13px] font-medium bg-surface rounded-lg border border-border
+            text-text-secondary hover:bg-surface-secondary hover:text-text-primary transition-all"
         >
-          ◀ PREV
+          <span className="mr-1">←</span> Prev
         </motion.button>
 
         <motion.button
-          whileHover={{ scale: 1.08 }}
-          whileTap={{ scale: 0.92 }}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
           onClick={handleLearning}
-          className="font-pixel text-[10px] px-5 py-3 bg-hot-pink/20 text-hot-pink border border-hot-pink/50 hover:bg-hot-pink/30 transition-colors"
+          className="px-5 py-2.5 text-[13px] font-medium rounded-lg
+            bg-danger-light text-danger border border-danger/20
+            hover:bg-danger/10 transition-all"
         >
-          STILL LEARNING
+          Still learning
         </motion.button>
 
         <motion.button
-          whileHover={{ scale: 1.08 }}
-          whileTap={{ scale: 0.92 }}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
           onClick={handleKnown}
-          className="font-pixel text-[10px] px-5 py-3 bg-neon-green/20 text-neon-green border border-neon-green/50 hover:bg-neon-green/30 transition-colors"
+          className="px-5 py-2.5 text-[13px] font-medium rounded-lg
+            bg-success-light text-success border border-success/20
+            hover:bg-success/10 transition-all"
         >
-          GOT IT ✓
+          Got it ✓
         </motion.button>
 
         <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={handleNext}
-          className="font-pixel text-[10px] px-4 py-2 bg-navy-lighter border border-gray-700 text-gray-300 hover:border-neon-green/50 transition-colors"
+          className="px-4 py-2.5 text-[13px] font-medium bg-surface rounded-lg border border-border
+            text-text-secondary hover:bg-surface-secondary hover:text-text-primary transition-all"
         >
-          NEXT ▶
+          Next <span className="ml-1">→</span>
         </motion.button>
       </div>
 
       {/* Shuffle button */}
       <div className="text-center mt-4">
         <motion.button
-          whileHover={{ scale: 1.05, rotate: 5 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.02, rotate: 3 }}
+          whileTap={{ scale: 0.98 }}
           onClick={handleShuffle}
-          className="font-pixel text-[9px] px-4 py-2 text-amber hover:text-amber/80 transition-colors"
+          className="text-[12px] font-medium px-4 py-2 text-text-muted hover:text-accent transition-colors"
         >
-          🔀 SHUFFLE
+          🔀 Shuffle deck
         </motion.button>
       </div>
     </motion.div>

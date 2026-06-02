@@ -19,12 +19,12 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 function getGrade(percentage: number): { letter: string; message: string; color: string } {
-  if (percentage >= 90) return { letter: "A+", message: "Absolutely brilliant! You've mastered this topic!", color: "text-neon-green" };
-  if (percentage >= 80) return { letter: "A", message: "Excellent work! Nearly perfect!", color: "text-neon-green" };
-  if (percentage >= 70) return { letter: "B", message: "Great job! You know this well.", color: "text-amber" };
-  if (percentage >= 60) return { letter: "C", message: "Good effort! A bit more revision will help.", color: "text-amber" };
-  if (percentage >= 50) return { letter: "D", message: "You're getting there! Keep studying.", color: "text-hot-pink" };
-  return { letter: "F", message: "Don't worry — review the notes and try again!", color: "text-hot-pink" };
+  if (percentage >= 90) return { letter: "A+", message: "Absolutely brilliant! You've mastered this topic!", color: "text-success" };
+  if (percentage >= 80) return { letter: "A", message: "Excellent work! Nearly perfect!", color: "text-success" };
+  if (percentage >= 70) return { letter: "B", message: "Great job! You know this well.", color: "text-accent" };
+  if (percentage >= 60) return { letter: "C", message: "Good effort! A bit more revision will help.", color: "text-accent" };
+  if (percentage >= 50) return { letter: "D", message: "You're getting there! Keep studying.", color: "text-danger" };
+  return { letter: "F", message: "Don't worry — review the notes and try again!", color: "text-danger" };
 }
 
 export function Quiz({ topic }: QuizProps) {
@@ -98,36 +98,39 @@ export function Quiz({ topic }: QuizProps) {
         transition={{ type: "spring", stiffness: 200, damping: 20 }}
         className="flex flex-col items-center py-12"
       >
-        <div className="text-6xl mb-4">
-          {percentage >= 70 ? "🎉" : percentage >= 50 ? "📚" : "💪"}
+        <div className="w-16 h-16 bg-accent-light rounded-2xl flex items-center justify-center mb-4">
+          <span className="text-3xl">
+            {percentage >= 70 ? "🎉" : percentage >= 50 ? "📚" : "💪"}
+          </span>
         </div>
-        <h3 className="font-pixel text-lg text-neon-green mb-2 text-glow-green">
-          QUIZ COMPLETE
+        <h3 className="text-xl font-semibold text-text-primary mb-6">
+          Quiz Complete
         </h3>
 
-        <div className="pixel-border p-8 bg-navy-lighter mt-6 text-center min-w-[300px]">
-          <div className={`font-pixel text-4xl ${grade.color} mb-4`}>
+        <div className="bg-surface rounded-2xl border border-border shadow-figma-md p-8 text-center min-w-[300px]">
+          <div className={`text-5xl font-bold ${grade.color} mb-3`}>
             {grade.letter}
           </div>
-          <p className="text-2xl text-gray-100 mb-2">
+          <p className="text-2xl font-semibold text-text-primary mb-1">
             {score}/{totalQuestions}
           </p>
-          <p className="text-sm text-gray-400 mb-4">{grade.message}</p>
+          <p className="text-sm text-text-secondary mb-6">{grade.message}</p>
 
-          <div className="border-t border-neon-green/20 pt-4 mt-4">
-            <p className="font-pixel text-[9px] text-amber">
-              PERSONAL BEST: {bestScore}/{totalQuestions}
+          <div className="border-t border-border pt-4">
+            <p className="text-[12px] font-medium text-text-muted">
+              Personal best: <span className="text-accent">{bestScore}/{totalQuestions}</span>
             </p>
           </div>
         </div>
 
         <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={handleRetry}
-          className="mt-8 font-pixel text-[10px] px-6 py-3 bg-neon-green/20 text-neon-green pixel-border hover:bg-neon-green/30 transition-colors"
+          className="mt-8 px-6 py-2.5 bg-accent text-white text-sm font-medium rounded-lg
+            hover:bg-accent-hover transition-colors"
         >
-          TRY AGAIN
+          Try again
         </motion.button>
       </motion.div>
     );
@@ -140,24 +143,24 @@ export function Quiz({ topic }: QuizProps) {
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >
       {/* Score header */}
-      <div className="flex justify-between items-center mb-6">
-        <span className="font-pixel text-[10px] text-neon-green">
-          {score}/{currentIndex + (showResult ? 1 : 0)} CORRECT
+      <div className="flex justify-between items-center mb-4">
+        <span className="text-[13px] font-medium text-accent">
+          {score}/{currentIndex + (showResult ? 1 : 0)} correct
         </span>
-        <span className="text-xs text-gray-500">
+        <span className="text-[13px] text-text-muted">
           Question {currentIndex + 1}/{totalQuestions}
         </span>
         {bestScore > 0 && (
-          <span className="font-pixel text-[9px] text-amber">
-            BEST: {bestScore}/{totalQuestions}
+          <span className="text-[12px] font-medium text-text-muted">
+            Best: <span className="text-accent">{bestScore}/{totalQuestions}</span>
           </span>
         )}
       </div>
 
       {/* Progress */}
-      <div className="h-2 bg-navy-lighter rounded-full overflow-hidden mb-8 pixel-border-subtle">
+      <div className="h-2 bg-surface-secondary rounded-full overflow-hidden mb-8">
         <motion.div
-          className="h-full bg-gradient-to-r from-hot-pink to-neon-green"
+          className="h-full bg-accent rounded-full"
           animate={{ width: `${((currentIndex + 1) / totalQuestions) * 100}%` }}
           transition={{ type: "spring", stiffness: 100 }}
         />
@@ -167,13 +170,13 @@ export function Quiz({ topic }: QuizProps) {
       <AnimatePresence mode="wait">
         <motion.div
           key={currentQuestion.id}
-          initial={{ opacity: 0, x: 50 }}
+          initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -50 }}
+          exit={{ opacity: 0, x: -30 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
-          <div className="p-6 bg-navy-lighter pixel-border rounded mb-6">
-            <p className="text-lg text-gray-100 leading-relaxed">
+          <div className="p-6 bg-surface rounded-xl border border-border shadow-figma-sm mb-6">
+            <p className="text-[16px] text-text-primary leading-relaxed">
               {currentQuestion.question}
             </p>
           </div>
@@ -181,48 +184,51 @@ export function Quiz({ topic }: QuizProps) {
           {/* Options */}
           <div className="grid gap-3">
             {currentQuestion.options.map((option, i) => {
-              let bgClass = "bg-navy-lighter border-gray-700 hover:border-neon-green/50 hover:bg-neon-green/5";
-              let textClass = "text-gray-200";
+              let containerClass = "bg-surface border-border hover:border-accent/40 hover:shadow-figma";
+              let textClass = "text-text-primary";
+              let numberClass = "text-text-muted bg-surface-secondary";
 
               if (showResult) {
                 if (i === currentQuestion.correctIndex) {
-                  bgClass = "bg-neon-green/20 border-neon-green";
-                  textClass = "text-neon-green";
+                  containerClass = "bg-success-light border-success/30 shadow-figma-sm";
+                  textClass = "text-success";
+                  numberClass = "text-success bg-success-light";
                 } else if (i === selectedAnswer && i !== currentQuestion.correctIndex) {
-                  bgClass = "bg-hot-pink/20 border-hot-pink";
-                  textClass = "text-hot-pink";
+                  containerClass = "bg-danger-light border-danger/30 shadow-figma-sm";
+                  textClass = "text-danger";
+                  numberClass = "text-danger bg-danger-light";
                 } else {
-                  bgClass = "bg-navy-lighter border-gray-800 opacity-50";
+                  containerClass = "bg-surface border-border opacity-40";
                 }
               }
 
               return (
                 <motion.button
                   key={i}
-                  whileHover={!showResult ? { scale: 1.02, x: 4 } : {}}
-                  whileTap={!showResult ? { scale: 0.98 } : {}}
+                  whileHover={!showResult ? { scale: 1.01, x: 2 } : {}}
+                  whileTap={!showResult ? { scale: 0.99 } : {}}
                   animate={
                     showResult && i === currentQuestion.correctIndex
-                      ? { scale: [1, 1.03, 1] }
+                      ? { scale: [1, 1.02, 1] }
                       : showResult && i === selectedAnswer && i !== currentQuestion.correctIndex
-                        ? { x: [0, -5, 5, -5, 0] }
+                        ? { x: [0, -4, 4, -4, 0] }
                         : {}
                   }
                   onClick={() => handleAnswer(i)}
                   disabled={selectedAnswer !== null}
-                  className={`flex items-center gap-4 p-4 border rounded text-left transition-all ${bgClass}`}
+                  className={`flex items-center gap-4 p-4 border rounded-xl text-left transition-all duration-200 ${containerClass}`}
                 >
-                  <span className="font-pixel text-[10px] text-gray-500 w-6">
+                  <span className={`text-[12px] font-semibold w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${numberClass}`}>
                     {i + 1}
                   </span>
-                  <span className={`text-sm ${textClass}`}>{option}</span>
+                  <span className={`text-[14px] ${textClass}`}>{option}</span>
                 </motion.button>
               );
             })}
           </div>
 
-          <p className="text-center text-[10px] text-gray-600 mt-4 font-pixel">
-            PRESS 1-4 TO ANSWER
+          <p className="text-center text-[11px] text-text-muted mt-5">
+            Press 1–4 to answer
           </p>
         </motion.div>
       </AnimatePresence>

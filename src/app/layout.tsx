@@ -3,8 +3,8 @@ import "./globals.css";
 import { Sidebar } from "@/components/Sidebar";
 
 export const metadata: Metadata = {
-  title: "BioRevise — Retro Biology Revision",
-  description: "A retro-pixel themed biology revision tool for UCIL20892 at University of Manchester",
+  title: "BioRevise — Biology Revision",
+  description: "A revision tool for UCIL20892 Biology for Curious Minds at University of Manchester",
 };
 
 export default function RootLayout({
@@ -14,9 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased font-body bg-navy min-h-screen">
+      <body className="antialiased font-sans bg-surface min-h-screen">
         <Sidebar />
-        <main className="lg:ml-64 min-h-screen pt-14 lg:pt-0">
+        <main className="lg:ml-[260px] min-h-screen pt-14 lg:pt-0">
           {children}
         </main>
       </body>

@@ -2,31 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700&display=swap');
-
-:root {
-  --navy: #0a0e1a;
-  --neon-green: #39ff14;
-  --hot-pink: #ff2d78;
-  --amber: #ffb800;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--neon-green) var(--navy);
+  scrollbar-color: #D4D4D4 transparent;
 }
 
 *::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 *::-webkit-scrollbar-track {
-  background: var(--navy);
+  background: transparent;
 }
 
 *::-webkit-scrollbar-thumb {
-  background: var(--neon-green);
-  border-radius: 0;
+  background: #D4D4D4;
+  border-radius: 3px;
 }
 
 html {
@@ -34,96 +27,20 @@ html {
 }
 
 body {
-  background: var(--navy);
-  color: #e0e0e0;
-  font-family: 'Inter', sans-serif;
+  background: #FFFFFF;
+  color: #1E1E1E;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.font-pixel {
-  font-family: 'Press Start 2P', cursive;
-}
-
-.pixel-border {
-  box-shadow:
-    0 0 0 2px var(--neon-green),
-    0 0 0 4px var(--navy),
-    0 0 0 6px var(--neon-green);
-}
-
-.pixel-border-pink {
-  box-shadow:
-    0 0 0 2px var(--hot-pink),
-    0 0 0 4px var(--navy),
-    0 0 0 6px var(--hot-pink);
-}
-
-.pixel-border-amber {
-  box-shadow:
-    0 0 0 2px var(--amber),
-    0 0 0 4px var(--navy),
-    0 0 0 6px var(--amber);
-}
-
-.pixel-border-subtle {
-  box-shadow:
-    0 0 0 2px rgba(57, 255, 20, 0.3),
-    0 0 0 4px var(--navy),
-    0 0 0 6px rgba(57, 255, 20, 0.15);
-}
-
-.glow-green {
-  box-shadow: 0 0 20px rgba(57, 255, 20, 0.3), 0 0 40px rgba(57, 255, 20, 0.1);
-}
-
-.glow-pink {
-  box-shadow: 0 0 20px rgba(255, 45, 120, 0.3), 0 0 40px rgba(255, 45, 120, 0.1);
-}
-
-.glow-amber {
-  box-shadow: 0 0 20px rgba(255, 184, 0, 0.3), 0 0 40px rgba(255, 184, 0, 0.1);
-}
-
-.text-glow-green {
-  text-shadow: 0 0 10px rgba(57, 255, 20, 0.5), 0 0 20px rgba(57, 255, 20, 0.3);
-}
-
-.text-glow-pink {
-  text-shadow: 0 0 10px rgba(255, 45, 120, 0.5), 0 0 20px rgba(255, 45, 120, 0.3);
-}
-
-.crt-flicker {
-  animation: flicker 0.15s infinite alternate;
-}
-
-@keyframes flicker {
-  0% { opacity: 0.97; }
-  100% { opacity: 1; }
-}
-
-.scanlines {
-  position: relative;
-}
-
-.scanlines::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.08) 2px,
-    rgba(0, 0, 0, 0.08) 4px
-  );
-  pointer-events: none;
-}
-
+/* Flashcard 3D flip */
 .card-3d {
-  perspective: 1000px;
+  perspective: 1200px;
 }
 
 .card-3d-inner {
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.5s ease;
   transform-style: preserve-3d;
 }
 
@@ -141,6 +58,7 @@ body {
   transform: rotateY(180deg);
 }
 
+/* Confetti */
 @keyframes confetti-fall {
   0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
   100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
@@ -148,22 +66,4 @@ body {
 
 .confetti-particle {
   animation: confetti-fall 3s ease-in forwards;
-}
-
-@keyframes toast-in {
-  0% { transform: translateY(20px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-
-.toast-animate {
-  animation: toast-in 0.3s ease-out forwards;
-}
-
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 5px rgba(57, 255, 20, 0.3); }
-  50% { box-shadow: 0 0 20px rgba(57, 255, 20, 0.6); }
-}
-
-.pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
 }

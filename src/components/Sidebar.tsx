@@ -22,24 +22,27 @@ export function Sidebar() {
     setProgressMap(map);
   }, [pathname]);
 
-  const navItems = topics.map((topic) => ({
+  const navItems = topics.map((topic, i) => ({
     id: topic.id,
     name: topic.name,
     icon: topic.icon,
     href: `/topic/${topic.id}`,
     progress: progressMap[topic.id] ?? 0,
+    index: i + 1,
   }));
 
   return (
     <>
-      {/* Mobile hamburger — hidden when sidebar is open */}
+      {/* Mobile hamburger */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="lg:hidden fixed top-3 left-4 z-50 p-2 pixel-border bg-navy-light"
+          className="lg:hidden fixed top-3 left-4 z-50 p-2 bg-surface rounded-lg shadow-figma border border-border"
           aria-label="Open menu"
         >
-          <span className="font-pixel text-neon-green text-xs">☰</span>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M3 5h14M3 10h14M3 15h14" stroke="#1E1E1E" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
         </button>
       )}
 
@@ -50,7 +53,7 @@ export function Sidebar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="lg:hidden fixed inset-0 bg-black/70 z-40"
+            className="lg:hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
             onClick={() => setIsOpen(false)}
           />
         )}
@@ -58,63 +61,69 @@ export function Sidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-navy-light border-r-2 border-neon-green/30 z-50 flex flex-col overflow-y-auto
-          ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 transition-transform duration-300 ease-out`}
+        className={`fixed top-0 left-0 h-full w-[260px] bg-surface border-r border-border z-50 flex flex-col overflow-y-auto
+          ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 transition-transform duration-200 ease-out`}
       >
-            {/* Logo */}
-            <Link href="/" className="block p-6 border-b border-neon-green/20">
-              <h1 className="font-pixel text-neon-green text-sm text-glow-green crt-flicker">
-                BioRevise
-              </h1>
-              <p className="text-[10px] text-gray-500 mt-2 font-pixel">
-                UCIL20892
-              </p>
-            </Link>
+        {/* Logo */}
+        <Link href="/" onClick={() => setIsOpen(false)} className="block px-5 py-5 border-b border-border">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">B</span>
+            </div>
+            <div>
+              <h1 className="font-semibold text-text-primary text-[15px] leading-tight">BioRevise</h1>
+              <p className="text-[11px] text-text-muted leading-tight">UCIL20892</p>
+            </div>
+          </div>
+        </Link>
 
-            {/* Navigation */}
-            <nav className="flex-1 p-4 space-y-2">
-              {navItems.map((item) => {
-                const isActive = pathname === item.href;
-                return (
-                  <Link
-                    key={item.id}
-                    href={item.href}
-                    onClick={() => setIsOpen(false)}
-                    className={`block p-3 rounded transition-all duration-200 group relative
-                      ${isActive
-                        ? "bg-neon-green/10 border border-neon-green/50"
-                        : "hover:bg-neon-green/5 border border-transparent hover:border-neon-green/20"
-                      }`}
-                  >
-                    <div className="flex items-start gap-2">
-                      <span className="text-lg">{item.icon}</span>
-                      <div className="flex-1 min-w-0">
-                        <span className={`text-xs font-medium leading-tight block
-                          ${isActive ? "text-neon-green" : "text-gray-300 group-hover:text-neon-green"}`}>
-                          {item.name}
-                        </span>
-                        {/* Progress bar */}
-                        <div className="mt-2 h-1 bg-navy rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-neon-green/60 transition-all duration-500"
-                            style={{ width: `${item.progress}%` }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    {item.progress === 100 && (
-                      <span className="absolute top-2 right-2 text-[10px]">✓</span>
-                    )}
-                  </Link>
-                );
-              })}
-            </nav>
+        {/* Navigation */}
+        <nav className="flex-1 px-3 py-3 space-y-0.5">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.id}
+                href={item.href}
+                onClick={() => setIsOpen(false)}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 group
+                  ${isActive
+                    ? "bg-accent-light text-accent"
+                    : "text-text-secondary hover:bg-surface-secondary hover:text-text-primary"
+                  }`}
+              >
+                <span className="text-base">{item.icon}</span>
+                <div className="flex-1 min-w-0">
+                  <span className={`text-[13px] font-medium block truncate
+                    ${isActive ? "text-accent" : ""}`}>
+                    {item.name}
+                  </span>
+                </div>
+                {/* Progress circle */}
+                <div className="relative w-6 h-6 flex-shrink-0">
+                  <svg className="w-6 h-6 -rotate-90" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" fill="none" stroke="#E5E5E5" strokeWidth="2" />
+                    <circle
+                      cx="12" cy="12" r="10" fill="none"
+                      stroke={isActive ? "#7B61FF" : "#14AE5C"}
+                      strokeWidth="2"
+                      strokeDasharray={`${(item.progress / 100) * 62.83} 62.83`}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  {item.progress === 100 && (
+                    <span className="absolute inset-0 flex items-center justify-center text-[8px]">✓</span>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
+        </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-neon-green/20">
-          <p className="font-pixel text-[8px] text-gray-600 text-center">
-            Biology for Curious Minds
-          </p>
+        <div className="px-5 py-4 border-t border-border">
+          <p className="text-[11px] text-text-muted">Biology for Curious Minds</p>
+          <p className="text-[11px] text-text-muted">University of Manchester</p>
         </div>
       </aside>
     </>

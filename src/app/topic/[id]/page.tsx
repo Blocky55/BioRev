@@ -20,51 +20,52 @@ export default function TopicPage() {
   if (!topic) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="font-pixel text-hot-pink text-sm">TOPIC NOT FOUND</p>
+        <p className="text-text-muted text-sm">Topic not found</p>
       </div>
     );
   }
 
   const tabs: { id: TabType; label: string; icon: string }[] = [
-    { id: "notes", label: "NOTES", icon: "📝" },
-    { id: "flashcards", label: "CARDS", icon: "🃏" },
-    { id: "quiz", label: "QUIZ", icon: "⚡" },
+    { id: "notes", label: "Notes", icon: "📝" },
+    { id: "flashcards", label: "Flashcards", icon: "🃏" },
+    { id: "quiz", label: "Quiz", icon: "⚡" },
   ];
 
   return (
-    <div className="p-6 lg:p-10 max-w-4xl mx-auto">
+    <div className="px-6 lg:px-10 py-8 max-w-[860px] mx-auto">
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="mb-8"
+        transition={{ duration: 0.3 }}
+        className="mb-6"
       >
-        <div className="flex items-center gap-3 mb-2">
-          <span className="text-3xl">{topic.icon}</span>
-          <h2 className="font-pixel text-neon-green text-xs lg:text-sm text-glow-green">
-            {topic.name}
-          </h2>
+        <div className="flex items-center gap-3 mb-1">
+          <span className="text-2xl">{topic.icon}</span>
+          <div>
+            <h2 className="text-xl font-semibold text-text-primary leading-tight">
+              {topic.name}
+            </h2>
+            <p className="text-[13px] text-text-muted">{topic.lecturer}</p>
+          </div>
         </div>
       </motion.div>
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-8 flex-wrap">
+      <div className="flex gap-1 mb-8 bg-surface-secondary rounded-lg p-1 w-fit">
         {tabs.map((tab) => (
-          <motion.button
+          <button
             key={tab.id}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
             onClick={() => setActiveTab(tab.id)}
-            className={`font-pixel text-[10px] px-4 py-2 transition-all duration-200 flex items-center gap-2
+            className={`text-[13px] font-medium px-4 py-2 rounded-md transition-all duration-150 flex items-center gap-1.5
               ${activeTab === tab.id
-                ? "bg-neon-green/20 text-neon-green border border-neon-green/50 glow-green"
-                : "bg-navy-lighter text-gray-400 border border-gray-700 hover:border-neon-green/30 hover:text-gray-200"
+                ? "bg-surface text-text-primary shadow-figma-sm"
+                : "text-text-muted hover:text-text-secondary"
               }`}
           >
-            <span>{tab.icon}</span>
+            <span className="text-sm">{tab.icon}</span>
             {tab.label}
-          </motion.button>
+          </button>
         ))}
       </div>
 
@@ -72,10 +73,10 @@ export default function TopicPage() {
       <AnimatePresence mode="wait">
         <motion.div
           key={activeTab}
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.25 }}
         >
           {activeTab === "notes" && <Notes topic={topic} />}
           {activeTab === "flashcards" && <Flashcard topic={topic} />}

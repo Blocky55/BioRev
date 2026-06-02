@@ -11,14 +11,12 @@ interface NotesProps {
 
 /**
  * Render markdown-lite note strings into HTML.
- * Handles **bold** → neon-green strong tags.
- * Only colourises the FIRST em-dash in a note (the title separator)
- * to avoid painting every dash in detailed lecture content.
+ * Handles **bold** with accent-coloured strong tags.
+ * Only colourises the FIRST em-dash in a note (the title separator).
  */
 function renderNote(note: string): string {
-  let html = note.replace(/\*\*(.*?)\*\*/g, '<strong class="text-neon-green font-semibold">$1</strong>');
-  // Only colour the first em-dash (title separator)
-  html = html.replace(/—/, '<span class="text-hot-pink"> — </span>');
+  let html = note.replace(/\*\*(.*?)\*\*/g, '<strong class="text-accent font-semibold">$1</strong>');
+  html = html.replace(/—/, '<span class="text-danger"> — </span>');
   return html;
 }
 
@@ -32,7 +30,6 @@ export function Notes({ topic }: NotesProps) {
   useEffect(() => {
     hasLoadedRef.current = false;
     setUserNotes(getStickyNotes(topic.id));
-    // Small delay so the initial load doesn't trigger save
     requestAnimationFrame(() => { hasLoadedRef.current = true; });
   }, [topic.id]);
 
@@ -42,7 +39,7 @@ export function Notes({ topic }: NotesProps) {
     setTimeout(() => setShowToast(false), 2000);
   }, [topic.id]);
 
-  // Debounced auto-save — only after user has actually typed
+  // Debounced auto-save
   useEffect(() => {
     if (!hasLoadedRef.current) return;
     const timeout = setTimeout(() => {
@@ -56,22 +53,28 @@ export function Notes({ topic }: NotesProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="space-y-8"
+      className="space-y-10"
     >
       {/* Topic Notes */}
       <div>
-        <h3 className="font-pixel text-neon-green text-xs mb-4">TOPIC NOTES</h3>
-        <div className="space-y-3">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-1 h-5 bg-accent rounded-full" />
+          <h3 className="text-[13px] font-semibold text-text-secondary uppercase tracking-wide">
+            Topic Notes
+          </h3>
+        </div>
+        <div className="space-y-2.5">
           {topic.notes.map((note, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -12 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.03, type: "spring", stiffness: 300, damping: 30 }}
-              className="p-4 bg-navy-lighter rounded border border-neon-green/10 hover:border-neon-green/30 transition-colors"
+              transition={{ delay: i * 0.025, type: "spring", stiffness: 300, damping: 30 }}
+              className="p-4 bg-surface rounded-xl border border-border shadow-figma-sm
+                hover:border-border-strong hover:shadow-figma transition-all duration-200"
             >
               <p
-                className="text-sm text-gray-200 leading-relaxed"
+                className="text-[14px] text-text-primary leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: renderNote(note) }}
               />
             </motion.div>
@@ -81,8 +84,13 @@ export function Notes({ topic }: NotesProps) {
 
       {/* Personal Notes */}
       <div className="relative">
-        <h3 className="font-pixel text-amber text-xs mb-4">YOUR NOTES</h3>
-        <div className="pixel-border-amber p-1 rounded">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-1 h-5 bg-warning rounded-full" />
+          <h3 className="text-[13px] font-semibold text-text-secondary uppercase tracking-wide">
+            Your Notes
+          </h3>
+        </div>
+        <div className="bg-surface rounded-xl border border-border shadow-figma-sm overflow-hidden">
           <textarea
             value={userNotes}
             onChange={(e) => {
@@ -91,23 +99,27 @@ export function Notes({ topic }: NotesProps) {
               }
             }}
             placeholder="Type your personal notes here... They auto-save!"
-            className="w-full h-40 bg-navy-light p-4 text-sm text-gray-200 rounded resize-none
-              focus:outline-none focus:ring-1 focus:ring-amber/50 placeholder:text-gray-600"
+            className="w-full h-40 p-4 text-[14px] text-text-primary bg-transparent rounded-xl resize-none
+              focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent
+              placeholder:text-text-muted transition-all duration-200"
           />
         </div>
-        <div className="flex justify-between items-center mt-2">
-          <span className="text-xs text-gray-500">
+        <div className="flex justify-between items-center mt-2 px-1">
+          <span className="text-[12px] text-text-muted">
             {userNotes.length}/{MAX_CHARS}
           </span>
           <AnimatePresence>
             {showToast && (
               <motion.span
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="font-pixel text-[10px] text-neon-green toast-animate"
+                exit={{ opacity: 0, y: -8 }}
+                className="text-[12px] font-medium text-success flex items-center gap-1"
               >
-                ✓ SAVED!
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M3.5 7L6 9.5L10.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Saved
               </motion.span>
             )}
           </AnimatePresence>
