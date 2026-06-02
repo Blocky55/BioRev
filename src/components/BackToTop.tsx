@@ -10,7 +10,7 @@ export function BackToTop() {
     const handleScroll = () => {
       setShow(window.scrollY > 400);
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -24,10 +24,12 @@ export function BackToTop() {
           whileHover={{ scale: 1.05, y: -1 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="fixed bottom-6 right-6 z-40 w-10 h-10 flex items-center justify-center
-            bg-surface rounded-xl border border-border shadow
-            text-text-secondary hover:text-primary hover:border-primary/30 hover:shadow-md
-            transition-all duration-200"
+          className="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-40
+            w-11 h-11 sm:w-10 sm:h-10 flex items-center justify-center
+            bg-surface rounded-xl border border-border shadow-md
+            text-text-secondary hover:text-primary hover:border-primary/30 hover:shadow-lg
+            active:text-primary active:bg-surface-secondary
+            transition-all duration-200 safe-bottom"
           aria-label="Back to top"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">

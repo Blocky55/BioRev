@@ -10,7 +10,11 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       {isTopicPage && <Sidebar />}
-      <main className={isTopicPage ? "lg:ml-[260px] min-h-screen pt-14 lg:pt-0" : "min-h-screen"}>
+      <main className={
+        isTopicPage
+          ? "lg:ml-[260px] min-h-screen pt-14 lg:pt-0"
+          : "min-h-screen"
+      }>
         {children}
       </main>
     </>

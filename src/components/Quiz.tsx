@@ -86,10 +86,20 @@ function selectQuestions(
   return ordered.slice(0, ROUND_SIZE);
 }
 
+/** Detect touch device */
+function useIsTouchDevice() {
+  const [isTouch, setIsTouch] = useState(false);
+  useEffect(() => {
+    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
+  }, []);
+  return isTouch;
+}
+
 export function Quiz({ topic }: QuizProps) {
   const [phase, setPhase] = useState<Phase>("select");
   const [mode, setMode] = useState<QuizMode>("quick");
   const [progress, setProgress] = useState<QuizProgress | null>(null);
+  const isTouch = useIsTouchDevice();
 
   // Active quiz state
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
@@ -203,30 +213,30 @@ export function Quiz({ topic }: QuizProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <h3 className="text-lg font-semibold text-text-primary mb-1">Quiz</h3>
-          <p className="text-sm text-text-secondary">
+          <p className="text-[13px] sm:text-sm text-text-secondary">
             {poolSize} questions in the pool. Choose a mode to start.
           </p>
         </div>
 
         {/* Stats bar */}
         {progress && progress.roundsCompleted > 0 && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-6 sm:mb-8">
             <div className="p-3 bg-surface rounded-xl border border-border">
-              <p className="text-xl font-bold text-text-primary">{progress.roundsCompleted}</p>
+              <p className="text-lg sm:text-xl font-bold text-text-primary">{progress.roundsCompleted}</p>
               <p className="text-[11px] text-text-muted mt-0.5">Rounds played</p>
             </div>
             <div className="p-3 bg-surface rounded-xl border border-border">
-              <p className="text-xl font-bold text-primary">{stats.accuracy}%</p>
+              <p className="text-lg sm:text-xl font-bold text-primary">{stats.accuracy}%</p>
               <p className="text-[11px] text-text-muted mt-0.5">Overall accuracy</p>
             </div>
             <div className="p-3 bg-surface rounded-xl border border-border">
-              <p className="text-xl font-bold text-text-primary">{stats.seen}<span className="text-text-muted font-normal text-sm">/{poolSize}</span></p>
+              <p className="text-lg sm:text-xl font-bold text-text-primary">{stats.seen}<span className="text-text-muted font-normal text-xs sm:text-sm">/{poolSize}</span></p>
               <p className="text-[11px] text-text-muted mt-0.5">Questions seen</p>
             </div>
             <div className="p-3 bg-surface rounded-xl border border-border">
-              <p className="text-xl font-bold text-danger">{stats.weakCount}</p>
+              <p className="text-lg sm:text-xl font-bold text-danger">{stats.weakCount}</p>
               <p className="text-[11px] text-text-muted mt-0.5">Weak spots</p>
             </div>
           </div>
@@ -237,23 +247,22 @@ export function Quiz({ topic }: QuizProps) {
           {modes.map((m) => (
             <motion.button
               key={m.id}
-              whileHover={!m.disabled ? { scale: 1.01, x: 2 } : {}}
               whileTap={!m.disabled ? { scale: 0.99 } : {}}
               onClick={() => !m.disabled && startRound(m.id)}
               disabled={m.disabled}
-              className={`p-5 border rounded-xl text-left transition-all duration-200 ${
+              className={`p-4 sm:p-5 border rounded-xl text-left transition-all duration-200 min-h-[56px] ${
                 m.disabled
                   ? "bg-surface-secondary border-border opacity-50 cursor-not-allowed"
-                  : "bg-surface border-border hover:border-primary/40 hover:shadow cursor-pointer"
+                  : "bg-surface border-border hover:border-primary/40 hover:shadow active:bg-surface-secondary cursor-pointer"
               }`}
             >
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
                   <p className="text-[14px] font-semibold text-text-primary">{m.label}</p>
-                  <p className="text-[13px] text-text-secondary mt-0.5">{m.desc}</p>
+                  <p className="text-[12px] sm:text-[13px] text-text-secondary mt-0.5">{m.desc}</p>
                 </div>
                 {!m.disabled && (
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-text-muted flex-shrink-0 ml-4">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-text-muted flex-shrink-0">
                     <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 )}
@@ -274,27 +283,27 @@ export function Quiz({ topic }: QuizProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-5 sm:mb-6">
           <h3 className="text-lg font-semibold text-text-primary">
             Review mistakes ({mistakes.length})
           </h3>
           <button
             onClick={() => setPhase("results")}
-            className="text-[13px] text-text-muted hover:text-text-primary transition-colors"
+            className="min-h-[44px] flex items-center text-[13px] text-text-muted hover:text-text-primary active:text-text-primary transition-colors"
           >
-            Back to results
+            Back
           </button>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {mistakes.map((a, i) => (
-            <div key={i} className="p-5 bg-surface rounded-xl border border-border">
-              <p className="text-[14px] font-medium text-text-primary mb-3">
+            <div key={i} className="p-4 sm:p-5 bg-surface rounded-xl border border-border">
+              <p className="text-[13px] sm:text-[14px] font-medium text-text-primary mb-3">
                 {a.question.question}
               </p>
               <div className="space-y-2">
                 <div className="flex items-start gap-2">
-                  <span className="text-[11px] font-medium text-danger bg-danger-light px-1.5 py-0.5 rounded mt-0.5">
+                  <span className="text-[11px] font-medium text-danger bg-danger-light px-1.5 py-0.5 rounded mt-0.5 flex-shrink-0">
                     Yours
                   </span>
                   <p className="text-[13px] text-danger">
@@ -302,7 +311,7 @@ export function Quiz({ topic }: QuizProps) {
                   </p>
                 </div>
                 <div className="flex items-start gap-2">
-                  <span className="text-[11px] font-medium text-success bg-success-light px-1.5 py-0.5 rounded mt-0.5">
+                  <span className="text-[11px] font-medium text-success bg-success-light px-1.5 py-0.5 rounded mt-0.5 flex-shrink-0">
                     Correct
                   </span>
                   <p className="text-[13px] text-success">
@@ -338,37 +347,37 @@ export function Quiz({ topic }: QuizProps) {
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: "spring", stiffness: 200, damping: 20 }}
-        className="flex flex-col items-center py-10"
+        className="flex flex-col items-center py-6 sm:py-10"
       >
-        <h3 className="text-lg font-semibold text-text-primary mb-6">Round complete</h3>
+        <h3 className="text-lg font-semibold text-text-primary mb-5 sm:mb-6">Round complete</h3>
 
-        <div className="bg-surface rounded-2xl border border-border shadow-md p-8 text-center w-full max-w-sm">
-          <div className={`text-5xl font-bold ${grade.color} mb-2`}>
+        <div className="bg-surface rounded-2xl border border-border shadow-md p-6 sm:p-8 text-center w-full max-w-sm">
+          <div className={`text-4xl sm:text-5xl font-bold ${grade.color} mb-2`}>
             {grade.letter}
           </div>
-          <p className="text-2xl font-semibold text-text-primary mb-1">
+          <p className="text-xl sm:text-2xl font-semibold text-text-primary mb-1">
             {finalScore}/{totalQ}
           </p>
-          <p className="text-sm text-text-secondary mb-5">{grade.message}</p>
+          <p className="text-[13px] sm:text-sm text-text-secondary mb-4 sm:mb-5">{grade.message}</p>
 
           <div className="grid grid-cols-2 gap-3 border-t border-border pt-4">
             <div>
-              <p className="text-xl font-bold text-primary">{overallAcc}%</p>
+              <p className="text-lg sm:text-xl font-bold text-primary">{overallAcc}%</p>
               <p className="text-[11px] text-text-muted">Overall accuracy</p>
             </div>
             <div>
-              <p className="text-xl font-bold text-text-primary">{progress?.bestRoundScore ?? 0}/{progress?.bestRoundTotal ?? 0}</p>
+              <p className="text-lg sm:text-xl font-bold text-text-primary">{progress?.bestRoundScore ?? 0}/{progress?.bestRoundTotal ?? 0}</p>
               <p className="text-[11px] text-text-muted">Personal best</p>
             </div>
           </div>
         </div>
 
         {/* Answer breakdown */}
-        <div className="w-full max-w-sm mt-6 space-y-1.5">
+        <div className="w-full max-w-sm mt-5 sm:mt-6 space-y-1.5">
           {answers.map((a, i) => (
             <div
               key={i}
-              className={`flex items-center gap-3 p-2.5 rounded-lg text-[13px] ${
+              className={`flex items-center gap-2 sm:gap-3 p-2.5 rounded-lg text-[12px] sm:text-[13px] ${
                 a.correct ? "bg-success-light text-success" : "bg-danger-light text-danger"
               }`}
             >
@@ -388,31 +397,28 @@ export function Quiz({ topic }: QuizProps) {
           ))}
         </div>
 
-        {/* Actions */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
+        {/* Actions — stack vertically on mobile */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-center gap-2 sm:gap-3 mt-6 sm:mt-8 w-full max-w-sm sm:max-w-none">
           <motion.button
-            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => startRound(mode)}
-            className="px-5 py-2.5 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-hover transition-colors"
+            className="min-h-[48px] sm:min-h-0 px-5 py-2.5 bg-primary text-white text-[15px] sm:text-sm font-medium rounded-lg hover:bg-primary-hover active:bg-primary-hover transition-colors"
           >
             Another round
           </motion.button>
           {mistakeCount > 0 && (
             <motion.button
-              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setPhase("review")}
-              className="px-5 py-2.5 bg-surface text-text-primary text-sm font-medium rounded-lg border border-border hover:bg-surface-secondary transition-colors"
+              className="min-h-[48px] sm:min-h-0 px-5 py-2.5 bg-surface text-text-primary text-[15px] sm:text-sm font-medium rounded-lg border border-border hover:bg-surface-secondary active:bg-surface-secondary transition-colors"
             >
               Review mistakes ({mistakeCount})
             </motion.button>
           )}
           <motion.button
-            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => setPhase("select")}
-            className="px-5 py-2.5 text-sm font-medium text-text-muted hover:text-text-primary transition-colors"
+            className="min-h-[48px] sm:min-h-0 px-5 py-2.5 text-[15px] sm:text-sm font-medium text-text-muted hover:text-text-primary active:text-text-primary transition-colors"
           >
             Change mode
           </motion.button>
@@ -434,20 +440,20 @@ export function Quiz({ topic }: QuizProps) {
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >
       {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <span className="text-[13px] font-medium text-primary">
+      <div className="flex justify-between items-center mb-3 sm:mb-4">
+        <span className="text-[12px] sm:text-[13px] font-medium text-primary">
           {score}/{currentIndex + (showResult ? 1 : 0)} correct
         </span>
-        <span className="text-[12px] text-text-muted px-2 py-0.5 bg-surface-secondary rounded">
+        <span className="text-[11px] sm:text-[12px] text-text-muted px-2 py-0.5 bg-surface-secondary rounded">
           {modeLabel}
         </span>
-        <span className="text-[13px] text-text-muted">
+        <span className="text-[12px] sm:text-[13px] text-text-muted">
           {currentIndex + 1}/{questions.length}
         </span>
       </div>
 
       {/* Progress */}
-      <div className="h-2 bg-surface-secondary rounded-full overflow-hidden mb-8">
+      <div className="h-2 bg-surface-secondary rounded-full overflow-hidden mb-5 sm:mb-8">
         <motion.div
           className="h-full bg-primary rounded-full"
           animate={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
@@ -464,15 +470,15 @@ export function Quiz({ topic }: QuizProps) {
           exit={{ opacity: 0, x: -30 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
-          <div className="p-6 bg-surface rounded-xl border border-border mb-6">
-            <p className="text-[16px] text-text-primary leading-relaxed">
+          <div className="p-4 sm:p-6 bg-surface rounded-xl border border-border mb-4 sm:mb-6">
+            <p className="text-[14px] sm:text-[16px] text-text-primary leading-relaxed">
               {currentQuestion.question}
             </p>
           </div>
 
-          <div className="grid gap-3">
+          <div className="grid gap-2.5 sm:gap-3">
             {currentQuestion.options.map((option, i) => {
-              let containerClass = "bg-surface border-border hover:border-primary/40 hover:shadow";
+              let containerClass = "bg-surface border-border hover:border-primary/40 hover:shadow active:bg-surface-secondary";
               let textClass = "text-text-primary";
               let numberClass = "text-text-muted bg-surface-secondary";
 
@@ -493,7 +499,6 @@ export function Quiz({ topic }: QuizProps) {
               return (
                 <motion.button
                   key={i}
-                  whileHover={!showResult ? { scale: 1.01, x: 2 } : {}}
                   whileTap={!showResult ? { scale: 0.99 } : {}}
                   animate={
                     showResult && i === currentQuestion.correctIndex
@@ -504,20 +509,24 @@ export function Quiz({ topic }: QuizProps) {
                   }
                   onClick={() => handleAnswer(i)}
                   disabled={selectedAnswer !== null}
-                  className={`flex items-center gap-4 p-4 border rounded-xl text-left transition-all duration-200 ${containerClass}`}
+                  className={`flex items-center gap-3 sm:gap-4 p-3.5 sm:p-4 border rounded-xl text-left
+                    transition-all duration-200 min-h-[52px] ${containerClass}`}
                 >
                   <span className={`text-[12px] font-semibold w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${numberClass}`}>
                     {i + 1}
                   </span>
-                  <span className={`text-[14px] ${textClass}`}>{option}</span>
+                  <span className={`text-[13px] sm:text-[14px] ${textClass}`}>{option}</span>
                 </motion.button>
               );
             })}
           </div>
 
-          <p className="text-center text-[11px] text-text-muted mt-5">
-            Press 1-4 to answer
-          </p>
+          {/* Keyboard hint — only on desktop (non-touch) */}
+          {!isTouch && (
+            <p className="text-center text-[11px] text-text-muted mt-4 sm:mt-5">
+              Press 1-4 to answer
+            </p>
+          )}
         </motion.div>
       </AnimatePresence>
     </motion.div>

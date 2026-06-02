@@ -44,42 +44,46 @@ export default function TopicPage() {
   const colorClass = TOPIC_COLORS[topicIndex % TOPIC_COLORS.length];
 
   return (
-    <div className="px-6 lg:px-10 py-8 max-w-[860px] mx-auto">
+    <div className="px-4 sm:px-6 lg:px-10 py-6 sm:py-8 max-w-[860px] mx-auto">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="mb-6"
+        className="mb-5 sm:mb-6"
       >
         <div className="flex items-center gap-3 mb-1">
-          <div className={`w-10 h-10 rounded-lg border flex items-center justify-center ${colorClass}`}>
-            <span className="text-[11px] font-bold">{topic.icon}</span>
+          <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg border flex items-center justify-center ${colorClass}`}>
+            <span className="text-[10px] sm:text-[11px] font-bold">{topic.icon}</span>
           </div>
-          <div>
-            <h2 className="text-xl font-semibold text-text-primary leading-tight">
+          <div className="min-w-0">
+            <h2 className="text-lg sm:text-xl font-semibold text-text-primary leading-tight truncate">
               {topic.name}
             </h2>
-            <p className="text-[13px] text-text-muted">{topic.lecturer}</p>
+            <p className="text-[12px] sm:text-[13px] text-text-muted">{topic.lecturer}</p>
           </div>
         </div>
       </motion.div>
 
-      {/* Tabs */}
-      <div className="flex gap-1 mb-8 bg-surface-secondary rounded-lg p-1 w-fit">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`text-[13px] font-medium px-5 py-2 rounded-md transition-all duration-150
-              ${activeTab === tab.id
-                ? "bg-surface text-text-primary shadow-sm"
-                : "text-text-muted hover:text-text-secondary"
-              }`}
-          >
-            {tab.label}
-          </button>
-        ))}
+      {/* Tabs — full-width on mobile, fit on desktop */}
+      <div className="sticky top-14 lg:top-0 z-30 -mx-4 sm:-mx-6 lg:mx-0 px-4 sm:px-6 lg:px-0 py-2 bg-surface/95 backdrop-blur-md lg:bg-transparent lg:backdrop-blur-none mb-6 sm:mb-8">
+        <div className="flex gap-1 bg-surface-secondary rounded-lg p-1 w-full sm:w-fit">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex-1 sm:flex-none text-[14px] sm:text-[13px] font-medium
+                min-h-[44px] sm:min-h-0 px-4 sm:px-5 py-2.5 sm:py-2
+                rounded-md transition-all duration-150
+                ${activeTab === tab.id
+                  ? "bg-surface text-text-primary shadow-sm"
+                  : "text-text-muted hover:text-text-secondary active:bg-surface/50"
+                }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Tab content */}

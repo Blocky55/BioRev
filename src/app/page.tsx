@@ -89,35 +89,35 @@ export default function Home() {
     <>
       <Navbar />
 
-      <div className="max-w-[1200px] mx-auto px-6 lg:px-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-10">
         {/* Hero */}
-        <section className="pt-32 pb-20 lg:pt-40 lg:pb-28">
+        <section className="pt-24 pb-14 sm:pt-28 sm:pb-16 lg:pt-40 lg:pb-28">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="max-w-2xl"
           >
-            <p className="text-sm font-medium text-primary mb-4 tracking-wide">
+            <p className="text-[13px] sm:text-sm font-medium text-primary mb-3 sm:mb-4 tracking-wide">
               UCIL20892 &middot; Biology for Curious Minds
             </p>
-            <h1 className="text-4xl lg:text-[56px] font-bold text-text-primary leading-[1.1] tracking-tight mb-5">
+            <h1 className="text-[28px] sm:text-4xl lg:text-[56px] font-bold text-text-primary leading-[1.1] tracking-tight mb-4 sm:mb-5">
               Master biology through active recall.
             </h1>
-            <p className="text-lg text-text-secondary leading-relaxed mb-8 max-w-lg">
+            <p className="text-[15px] sm:text-lg text-text-secondary leading-relaxed mb-6 sm:mb-8 max-w-lg">
               Six lectures distilled into notes, flashcards, and quizzes.
               Everything you need for the exam, nothing you don&apos;t.
             </p>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <a
                 href="#topics"
-                className="px-6 py-3 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-hover transition-colors"
+                className="flex items-center justify-center min-h-[48px] sm:min-h-0 px-6 py-3 bg-primary text-white text-[15px] sm:text-sm font-medium rounded-lg hover:bg-primary-hover active:bg-primary-hover transition-colors"
               >
                 Browse topics
               </a>
               <a
                 href="#plan"
-                className="px-6 py-3 bg-surface text-text-primary text-sm font-medium rounded-lg border border-border hover:bg-surface-secondary transition-colors"
+                className="flex items-center justify-center min-h-[48px] sm:min-h-0 px-6 py-3 bg-surface text-text-primary text-[15px] sm:text-sm font-medium rounded-lg border border-border hover:bg-surface-secondary active:bg-surface-secondary transition-colors"
               >
                 Study plan
               </a>
@@ -126,48 +126,48 @@ export default function Home() {
         </section>
 
         {/* Stats */}
-        <section id="progress" className="scroll-mt-24 pb-20">
+        <section id="progress" className="scroll-mt-20 sm:scroll-mt-24 pb-14 sm:pb-20">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, duration: 0.4 }}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-4"
+            className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"
           >
-            <div className="p-5 bg-surface rounded-xl border border-border">
-              <p className="text-3xl font-bold text-primary">{daysLeft}</p>
-              <p className="text-[13px] text-text-muted mt-1">Days until exam</p>
+            <div className="p-4 sm:p-5 bg-surface rounded-xl border border-border">
+              <p className="text-2xl sm:text-3xl font-bold text-primary">{daysLeft}</p>
+              <p className="text-[12px] sm:text-[13px] text-text-muted mt-1">Days until exam</p>
             </div>
-            <div className="p-5 bg-surface rounded-xl border border-border">
-              <p className="text-3xl font-bold text-text-primary">
+            <div className="p-4 sm:p-5 bg-surface rounded-xl border border-border">
+              <p className="text-2xl sm:text-3xl font-bold text-text-primary">
                 {topicsStarted}
-                <span className="text-text-muted font-normal text-lg">/{topics.length}</span>
+                <span className="text-text-muted font-normal text-base sm:text-lg">/{topics.length}</span>
               </p>
-              <p className="text-[13px] text-text-muted mt-1">Topics started</p>
+              <p className="text-[12px] sm:text-[13px] text-text-muted mt-1">Topics started</p>
             </div>
-            <div className="p-5 bg-surface rounded-xl border border-border">
-              <p className="text-3xl font-bold text-success">
+            <div className="p-4 sm:p-5 bg-surface rounded-xl border border-border">
+              <p className="text-2xl sm:text-3xl font-bold text-success">
                 {totalFlashcardsKnown}
-                <span className="text-text-muted font-normal text-lg">/{totalFlashcards}</span>
+                <span className="text-text-muted font-normal text-base sm:text-lg">/{totalFlashcards}</span>
               </p>
-              <p className="text-[13px] text-text-muted mt-1">Cards mastered</p>
+              <p className="text-[12px] sm:text-[13px] text-text-muted mt-1">Cards mastered</p>
             </div>
-            <div className="p-5 bg-surface rounded-xl border border-border">
-              <p className="text-3xl font-bold text-text-primary">{totalQuizzesCompleted}</p>
-              <p className="text-[13px] text-text-muted mt-1">Quizzes completed</p>
+            <div className="p-4 sm:p-5 bg-surface rounded-xl border border-border">
+              <p className="text-2xl sm:text-3xl font-bold text-text-primary">{totalQuizzesCompleted}</p>
+              <p className="text-[12px] sm:text-[13px] text-text-muted mt-1">Quizzes completed</p>
             </div>
           </motion.div>
         </section>
 
         {/* Topics */}
-        <section id="topics" className="scroll-mt-24 pb-24">
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-text-primary">The syllabus</h2>
-            <p className="text-text-secondary mt-1">
+        <section id="topics" className="scroll-mt-20 sm:scroll-mt-24 pb-16 sm:pb-24">
+          <div className="mb-6 sm:mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold text-text-primary">The syllabus</h2>
+            <p className="text-[14px] sm:text-base text-text-secondary mt-1">
               Six topics, one exam. Pick a topic to start revising.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {topics.map((topic, i) => {
               const topicStats = stats[topic.id];
               const progress = topicStats?.flashcardProgress ?? 0;
@@ -180,7 +180,7 @@ export default function Home() {
                   transition={{ delay: 0.1 + i * 0.05, duration: 0.35 }}
                 >
                   <Link href={`/topic/${topic.id}`}>
-                    <div className="p-5 bg-surface rounded-xl border border-border hover:border-primary/30 hover:shadow-md transition-all duration-200 group h-full flex flex-col">
+                    <div className="p-4 sm:p-5 bg-surface rounded-xl border border-border hover:border-primary/30 hover:shadow-md active:shadow transition-all duration-200 group h-full flex flex-col">
                       {/* Header */}
                       <div className="flex items-start gap-3 mb-3">
                         <div className={`w-10 h-10 rounded-lg ${color.bg} ${color.border} border flex items-center justify-center flex-shrink-0`}>
@@ -204,18 +204,31 @@ export default function Home() {
                       {/* Lecturer */}
                       <p className="text-[12px] text-text-muted mb-3">{topic.lecturer}</p>
 
-                      {/* Key topics */}
-                      <div className="flex flex-wrap gap-1.5 mb-4">
+                      {/* Key topics — hide on very small phones to save space, show on sm+ */}
+                      <div className="hidden sm:flex flex-wrap gap-1.5 mb-4">
                         {topic.keyTopics.map((kt) => (
                           <span key={kt} className="text-[11px] text-text-secondary bg-surface-secondary px-2 py-0.5 rounded-md">
                             {kt}
                           </span>
                         ))}
                       </div>
+                      {/* On mobile, show only first 3 key topics */}
+                      <div className="flex sm:hidden flex-wrap gap-1.5 mb-4">
+                        {topic.keyTopics.slice(0, 3).map((kt) => (
+                          <span key={kt} className="text-[11px] text-text-secondary bg-surface-secondary px-2 py-0.5 rounded-md">
+                            {kt}
+                          </span>
+                        ))}
+                        {topic.keyTopics.length > 3 && (
+                          <span className="text-[11px] text-text-muted px-1">
+                            +{topic.keyTopics.length - 3}
+                          </span>
+                        )}
+                      </div>
 
                       {/* Progress */}
                       <div className="mt-auto pt-3 border-t border-border">
-                        <div className="flex items-center justify-between text-[12px] mb-1.5">
+                        <div className="flex items-center justify-between text-[11px] sm:text-[12px] mb-1.5">
                           <span className="text-text-muted">{progress}% cards mastered</span>
                           <span className="text-text-muted">
                             best {topicStats ? `${topicStats.quizBest}/${topicStats.quizTotal}` : "--"}
@@ -237,18 +250,18 @@ export default function Home() {
         </section>
 
         {/* Study Plan */}
-        <section id="plan" className="scroll-mt-24 pb-24">
+        <section id="plan" className="scroll-mt-20 sm:scroll-mt-24 pb-16 sm:pb-24">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.4 }}
           >
-            <h2 className="text-2xl font-bold text-text-primary mb-1">Study plan</h2>
-            <p className="text-text-secondary mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold text-text-primary mb-1">Study plan</h2>
+            <p className="text-[14px] sm:text-base text-text-secondary mb-6 sm:mb-8">
               A weekly rotation to cover everything before the exam.
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
               {studyPlan.map((block, i) => {
                 const colors = [
                   "bg-primary-light border-primary/10",
@@ -266,7 +279,7 @@ export default function Home() {
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 + i * 0.08, duration: 0.35 }}
-                    className={`p-6 rounded-xl border ${colors[i]}`}
+                    className={`p-5 sm:p-6 rounded-xl border ${colors[i]}`}
                   >
                     <p className={`text-[12px] font-semibold ${dayColors[i]} mb-1`}>
                       {block.days}
@@ -285,18 +298,18 @@ export default function Home() {
         </section>
 
         {/* Footer */}
-        <footer className="border-t border-border py-10">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <footer className="border-t border-border py-8 sm:py-10 safe-bottom">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
             <div className="flex items-center gap-2.5">
               <div className="w-6 h-6 bg-primary rounded flex items-center justify-center">
                 <span className="text-white font-bold text-[10px]">B</span>
               </div>
-              <span className="text-sm text-text-muted">
+              <span className="text-[13px] sm:text-sm text-text-muted">
                 BioRevise &middot; UCIL20892 &middot; 2026
               </span>
             </div>
-            <p className="text-sm text-text-muted">
-              University of Manchester &middot; Biology for Curious Minds
+            <p className="text-[13px] sm:text-sm text-text-muted">
+              University of Manchester
             </p>
           </div>
         </footer>

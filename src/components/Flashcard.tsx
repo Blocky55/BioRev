@@ -39,6 +39,15 @@ function ConfettiEffect() {
   );
 }
 
+/** Check if device supports touch */
+function useIsTouchDevice() {
+  const [isTouch, setIsTouch] = useState(false);
+  useEffect(() => {
+    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
+  }, []);
+  return isTouch;
+}
+
 export function Flashcard({ topic }: FlashcardProps) {
   const [cards, setCards] = useState(topic.flashcards);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -47,6 +56,7 @@ export function Flashcard({ topic }: FlashcardProps) {
   const [learning, setLearning] = useState<string[]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
   const [allDone, setAllDone] = useState(false);
+  const isTouch = useIsTouchDevice();
 
   useEffect(() => {
     const progress = getFlashcardProgress(topic.id);
@@ -138,27 +148,27 @@ export function Flashcard({ topic }: FlashcardProps) {
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="flex flex-col items-center justify-center py-16"
+        className="flex flex-col items-center justify-center py-12 sm:py-16"
       >
         {showConfetti && <ConfettiEffect />}
-        <div className="w-16 h-16 bg-primary-light rounded-2xl flex items-center justify-center mb-6">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+        <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary-light rounded-2xl flex items-center justify-center mb-5 sm:mb-6">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="sm:w-7 sm:h-7">
             <path d="M9 12l2 2 4-4" stroke="#047857" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             <circle cx="12" cy="12" r="10" stroke="#047857" strokeWidth="2" />
           </svg>
         </div>
-        <h3 className="text-xl font-semibold text-text-primary mb-2">
+        <h3 className="text-lg sm:text-xl font-semibold text-text-primary mb-2">
           Deck complete
         </h3>
-        <p className="text-text-secondary text-sm text-center mb-8 max-w-sm">
+        <p className="text-text-secondary text-[14px] sm:text-sm text-center mb-6 sm:mb-8 max-w-sm px-4">
           You&apos;ve mastered all {totalCards} flashcards in this topic.
         </p>
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={handleReset}
-          className="px-5 py-2.5 bg-surface text-danger text-sm font-medium rounded-lg
-            border border-danger/20 hover:bg-danger-light transition-colors"
+          className="min-h-[44px] px-5 py-2.5 bg-surface text-danger text-sm font-medium rounded-lg
+            border border-danger/20 hover:bg-danger-light active:bg-danger-light transition-colors"
         >
           Reset and study again
         </motion.button>
@@ -168,11 +178,11 @@ export function Flashcard({ topic }: FlashcardProps) {
 
   if (!currentCard) {
     return (
-      <div className="text-center py-16">
+      <div className="text-center py-12 sm:py-16">
         <p className="text-text-muted text-sm">No cards remaining.</p>
         <button
           onClick={handleReset}
-          className="mt-4 text-sm text-primary hover:text-primary-hover underline underline-offset-2 transition-colors"
+          className="mt-4 min-h-[44px] text-sm text-primary hover:text-primary-hover underline underline-offset-2 transition-colors"
         >
           Reset deck
         </button>
@@ -189,13 +199,13 @@ export function Flashcard({ topic }: FlashcardProps) {
       {showConfetti && <ConfettiEffect />}
 
       {/* Progress bar */}
-      <div className="mb-8">
-        <div className="flex justify-between items-center mb-2.5">
+      <div className="mb-6 sm:mb-8">
+        <div className="flex justify-between items-center mb-2 sm:mb-2.5">
           <span className="text-[13px] font-medium text-primary">
             {knownCount}/{totalCards} mastered
           </span>
-          <span className="text-[13px] text-text-muted">
-            Card {currentIndex + 1} of {remainingCards.length} remaining
+          <span className="text-[12px] sm:text-[13px] text-text-muted">
+            {currentIndex + 1} of {remainingCards.length}
           </span>
         </div>
         <div className="h-2 bg-surface-secondary rounded-full overflow-hidden">
@@ -213,89 +223,87 @@ export function Flashcard({ topic }: FlashcardProps) {
         className="card-3d cursor-pointer mx-auto max-w-xl"
         onClick={() => setIsFlipped(!isFlipped)}
       >
-        <div className={`card-3d-inner relative w-full min-h-[280px] ${isFlipped ? "flipped" : ""}`}>
+        <div className={`card-3d-inner relative w-full min-h-[220px] sm:min-h-[280px] ${isFlipped ? "flipped" : ""}`}>
           {/* Front */}
-          <div className="card-3d-front absolute inset-0 p-8 bg-surface rounded-2xl border border-border shadow-md
+          <div className="card-3d-front absolute inset-0 p-5 sm:p-8 bg-surface rounded-2xl border border-border shadow-md
             flex flex-col items-center justify-center">
-            <span className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-4">
+            <span className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-3 sm:mb-4">
               Question
             </span>
-            <p className="text-lg text-center text-text-primary leading-relaxed">
+            <p className="text-[15px] sm:text-lg text-center text-text-primary leading-relaxed">
               {currentCard.front}
             </p>
-            <span className="text-[11px] text-text-muted mt-6">
-              Click to flip
+            <span className="text-[11px] text-text-muted mt-4 sm:mt-6">
+              {isTouch ? "Tap to flip" : "Click to flip"}
             </span>
           </div>
 
           {/* Back */}
-          <div className="card-3d-back absolute inset-0 p-8 bg-primary-light rounded-2xl border border-primary/15 shadow-md
+          <div className="card-3d-back absolute inset-0 p-5 sm:p-8 bg-primary-light rounded-2xl border border-primary/15 shadow-md
             flex flex-col items-center justify-center">
-            <span className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-4">
+            <span className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-3 sm:mb-4">
               Answer
             </span>
-            <p className="text-lg text-center text-text-primary leading-relaxed">
+            <p className="text-[15px] sm:text-lg text-center text-text-primary leading-relaxed">
               {currentCard.back}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Controls */}
-      <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={handlePrev}
-          className="px-4 py-2.5 text-[13px] font-medium bg-surface rounded-lg border border-border
-            text-text-secondary hover:bg-surface-secondary hover:text-text-primary transition-all"
-        >
-          Prev
-        </motion.button>
+      {/* Controls — mobile: 2-row layout, desktop: inline */}
+      <div className="mt-6 sm:mt-8">
+        {/* Row 1: Knowledge buttons (always visible, full width on mobile) */}
+        <div className="grid grid-cols-2 sm:flex sm:justify-center gap-2 sm:gap-3">
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            onClick={handleLearning}
+            className="min-h-[48px] sm:min-h-0 px-4 sm:px-5 py-2.5 text-[14px] sm:text-[13px] font-medium rounded-lg
+              bg-danger-light text-danger border border-danger/20
+              hover:bg-danger/10 active:bg-danger/10 transition-all"
+          >
+            Still learning
+          </motion.button>
 
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={handleLearning}
-          className="px-5 py-2.5 text-[13px] font-medium rounded-lg
-            bg-danger-light text-danger border border-danger/20
-            hover:bg-danger/10 transition-all"
-        >
-          Still learning
-        </motion.button>
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            onClick={handleKnown}
+            className="min-h-[48px] sm:min-h-0 px-4 sm:px-5 py-2.5 text-[14px] sm:text-[13px] font-medium rounded-lg
+              bg-success-light text-success border border-success/20
+              hover:bg-success/10 active:bg-success/10 transition-all"
+          >
+            Got it
+          </motion.button>
+        </div>
 
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={handleKnown}
-          className="px-5 py-2.5 text-[13px] font-medium rounded-lg
-            bg-success-light text-success border border-success/20
-            hover:bg-success/10 transition-all"
-        >
-          Got it
-        </motion.button>
+        {/* Row 2: Navigation + shuffle */}
+        <div className="flex items-center justify-center gap-2 sm:gap-3 mt-3">
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            onClick={handlePrev}
+            className="min-h-[44px] px-4 py-2 text-[13px] font-medium bg-surface rounded-lg border border-border
+              text-text-secondary hover:bg-surface-secondary active:bg-surface-secondary hover:text-text-primary transition-all"
+          >
+            Prev
+          </motion.button>
 
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={handleNext}
-          className="px-4 py-2.5 text-[13px] font-medium bg-surface rounded-lg border border-border
-            text-text-secondary hover:bg-surface-secondary hover:text-text-primary transition-all"
-        >
-          Next
-        </motion.button>
-      </div>
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            onClick={handleShuffle}
+            className="min-h-[44px] px-4 py-2 text-[13px] font-medium text-text-muted hover:text-primary active:text-primary transition-colors"
+          >
+            Shuffle
+          </motion.button>
 
-      {/* Shuffle button */}
-      <div className="text-center mt-4">
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={handleShuffle}
-          className="text-[12px] font-medium px-4 py-2 text-text-muted hover:text-primary transition-colors"
-        >
-          Shuffle deck
-        </motion.button>
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            onClick={handleNext}
+            className="min-h-[44px] px-4 py-2 text-[13px] font-medium bg-surface rounded-lg border border-border
+              text-text-secondary hover:bg-surface-secondary active:bg-surface-secondary hover:text-text-primary transition-all"
+          >
+            Next
+          </motion.button>
+        </div>
       </div>
     </motion.div>
   );

@@ -51,28 +51,28 @@ export function Notes({ topic }: NotesProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="space-y-10"
+      className="space-y-8 sm:space-y-10"
     >
       {/* Topic Notes */}
       <div>
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 mb-3 sm:mb-4">
           <div className="w-1 h-5 bg-primary rounded-full" />
           <h3 className="text-[13px] font-semibold text-text-secondary uppercase tracking-wide">
             Topic Notes
           </h3>
         </div>
-        <div className="space-y-2.5">
+        <div className="space-y-2 sm:space-y-2.5">
           {topic.notes.map((note, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, x: -12 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.025, type: "spring", stiffness: 300, damping: 30 }}
-              className="p-4 bg-surface rounded-xl border border-border
-                hover:border-border-strong transition-all duration-200"
+              className="p-3.5 sm:p-4 bg-surface rounded-xl border border-border
+                hover:border-border-strong active:border-border-strong transition-all duration-200"
             >
               <p
-                className="text-[14px] text-text-primary leading-relaxed"
+                className="text-[13px] sm:text-[14px] text-text-primary leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: renderNote(note) }}
               />
             </motion.div>
@@ -82,7 +82,7 @@ export function Notes({ topic }: NotesProps) {
 
       {/* Personal Notes */}
       <div className="relative">
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 mb-3 sm:mb-4">
           <div className="w-1 h-5 bg-warning rounded-full" />
           <h3 className="text-[13px] font-semibold text-text-secondary uppercase tracking-wide">
             Your Notes
@@ -97,13 +97,13 @@ export function Notes({ topic }: NotesProps) {
               }
             }}
             placeholder="Type your personal notes here... They auto-save."
-            className="w-full h-40 p-4 text-[14px] text-text-primary bg-transparent rounded-xl resize-none
+            className="w-full h-36 sm:h-40 p-3.5 sm:p-4 text-[14px] text-text-primary bg-transparent rounded-xl resize-none
               focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary
               placeholder:text-text-muted transition-all duration-200"
           />
         </div>
         <div className="flex justify-between items-center mt-2 px-1">
-          <span className="text-[12px] text-text-muted">
+          <span className="text-[11px] sm:text-[12px] text-text-muted">
             {userNotes.length}/{MAX_CHARS}
           </span>
           <AnimatePresence>
