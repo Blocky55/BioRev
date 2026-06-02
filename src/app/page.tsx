@@ -1,101 +1,164 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { topics } from "@/lib/topics";
+import { getFlashcardProgress, getQuizResult } from "@/lib/progress";
+
+interface TopicStats {
+  flashcardProgress: number;
+  quizBest: number;
+  quizTotal: number;
+  quizzesCompleted: number;
+}
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [stats, setStats] = useState<Record<string, TopicStats>>({});
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    const s: Record<string, TopicStats> = {};
+    topics.forEach((topic) => {
+      const fc = getFlashcardProgress(topic.id);
+      const quiz = getQuizResult(topic.id);
+      s[topic.id] = {
+        flashcardProgress: Math.round((fc.known.length / topic.flashcards.length) * 100),
+        quizBest: quiz.bestScore,
+        quizTotal: topic.quiz.length,
+        quizzesCompleted: quiz.completedCount,
+      };
+    });
+    setStats(s);
+  }, []);
+
+  const totalFlashcardsKnown = Object.values(stats).reduce(
+    (sum, s) => sum + Math.round((s.flashcardProgress / 100) * (topics.find((t) => stats[t.id] === s)?.flashcards.length ?? 0)),
+    0
+  );
+  const totalFlashcards = topics.reduce((sum, t) => sum + t.flashcards.length, 0);
+  const totalQuizzesCompleted = Object.values(stats).reduce((sum, s) => sum + s.quizzesCompleted, 0);
+
+  return (
+    <div className="p-6 lg:p-10 max-w-5xl mx-auto">
+      {/* Hero */}
+      <motion.div
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+        className="text-center mb-12 pt-8"
+      >
+        <div className="scanlines inline-block">
+          <h1 className="font-pixel text-2xl lg:text-4xl text-neon-green text-glow-green crt-flicker mb-4">
+            BioRevise
+          </h1>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <p className="text-gray-400 text-sm mt-4 max-w-md mx-auto">
+          Your retro-pixel biology revision companion. Master all 6 topics through notes, flashcards, and quizzes.
+        </p>
+        <p className="font-pixel text-[9px] text-gray-600 mt-2">
+          UCIL20892 — BIOLOGY FOR CURIOUS MINDS
+        </p>
+      </motion.div>
+
+      {/* Topic Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        {topics.map((topic, i) => {
+          const topicStats = stats[topic.id];
+          return (
+            <motion.div
+              key={topic.id}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1, type: "spring", stiffness: 200, damping: 20 }}
+            >
+              <Link href={`/topic/${topic.id}`}>
+                <motion.div
+                  whileHover={{ scale: 1.03, y: -4 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="p-6 bg-navy-light border border-neon-green/20 rounded transition-all duration-300 hover:border-neon-green/50 hover:glow-green group h-full"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <span className="text-3xl group-hover:scale-110 transition-transform">
+                      {topic.icon}
+                    </span>
+                    {topicStats && topicStats.flashcardProgress === 100 && (
+                      <span className="font-pixel text-[9px] text-neon-green bg-neon-green/10 px-2 py-1 rounded">
+                        ✓ DONE
+                      </span>
+                    )}
+                  </div>
+
+                  <h3 className="font-pixel text-[10px] text-gray-200 group-hover:text-neon-green transition-colors mb-3 leading-relaxed">
+                    {topic.name}
+                  </h3>
+
+                  <div className="space-y-2 text-xs text-gray-500">
+                    <div className="flex justify-between">
+                      <span>Flashcards</span>
+                      <span className="text-neon-green/70">
+                        {topicStats ? `${topicStats.flashcardProgress}%` : "0%"}
+                      </span>
+                    </div>
+                    <div className="h-1 bg-navy rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-neon-green/50 transition-all duration-700"
+                        style={{ width: `${topicStats?.flashcardProgress ?? 0}%` }}
+                      />
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Quiz best</span>
+                      <span className="text-amber/70">
+                        {topicStats ? `${topicStats.quizBest}/${topicStats.quizTotal}` : "—"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Cards</span>
+                      <span className="text-gray-400">{topic.flashcards.length}</span>
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* Global Stats */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6, type: "spring" }}
+        className="pixel-border p-6 bg-navy-light"
+      >
+        <h3 className="font-pixel text-[10px] text-amber mb-4">GLOBAL STATS</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="text-center">
+            <p className="font-pixel text-lg text-neon-green text-glow-green">
+              {totalFlashcardsKnown}/{totalFlashcards}
+            </p>
+            <p className="text-xs text-gray-500 mt-1">Cards Mastered</p>
+          </div>
+          <div className="text-center">
+            <p className="font-pixel text-lg text-hot-pink text-glow-pink">
+              {totalQuizzesCompleted}
+            </p>
+            <p className="text-xs text-gray-500 mt-1">Quizzes Completed</p>
+          </div>
+          <div className="text-center">
+            <p className="font-pixel text-lg text-amber">
+              {topics.length}
+            </p>
+            <p className="text-xs text-gray-500 mt-1">Topics Available</p>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Footer */}
+      <div className="text-center mt-8 pb-8">
+        <p className="font-pixel text-[8px] text-gray-700">
+          BUILT FOR REVISION • NOT AFFILIATED WITH UOM
+        </p>
+      </div>
     </div>
   );
 }

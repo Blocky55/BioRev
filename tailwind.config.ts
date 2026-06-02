@@ -9,8 +9,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        navy: "#0a0e1a",
+        "navy-light": "#131929",
+        "navy-lighter": "#1a2236",
+        "neon-green": "#39ff14",
+        "hot-pink": "#ff2d78",
+        amber: "#ffb800",
+      },
+      fontFamily: {
+        pixel: ['"Press Start 2P"', "cursive"],
+        body: ["Inter", "sans-serif"],
       },
     },
   },
