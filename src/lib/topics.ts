@@ -15,6 +15,8 @@ export interface Topic {
   id: string;
   name: string;
   icon: string;
+  lecturer: string;
+  keyTopics: string[];
   notes: string[];
   flashcards: Flashcard[];
   quiz: QuizQuestion[];
@@ -28,6 +30,8 @@ export const topics: Topic[] = [
     id: "dna-human-genome",
     name: "DNA & Human Genome Project",
     icon: "🧬",
+    lecturer: "Dr Maggy Fostier",
+    keyTopics: ["Mitosis vs meiosis", "SNPs & frameshifts", "GWAS & 23andMe", "Cystic Fibrosis"],
     notes: [
       // Part A
       "**Chromosomes & Karyotypes** — Humans have 46 chromosomes (23 pairs): 22 pairs of autosomes and 1 pair of sex chromosomes. A karyotype shows these 23 pairs arranged by size and shape when a cell begins dividing — used to detect abnormalities like trisomy 21.",
@@ -102,6 +106,8 @@ export const topics: Topic[] = [
     id: "development-stem-cells",
     name: "Development & Stem Cells",
     icon: "🔬",
+    lecturer: "Dr Maggy Fostier",
+    keyTopics: ["Gastrulation & germ layers", "Potency hierarchy", "ESCs vs ASCs vs iPSCs", "Dolly & reprogramming"],
     notes: [
       // Part A: Development
       "**From Zygote to Organism** — A fertilised egg (zygote) develops into trillions of cells with 220 cell types organised in tissues and organs. This requires mitosis, cell differentiation, and morphogenesis.",
@@ -166,6 +172,8 @@ export const topics: Topic[] = [
     id: "precision-medicine",
     name: "Precision Medicine",
     icon: "🎯",
+    lecturer: "Dr Shazia Hyatt",
+    keyTopics: ["P4 medicine", "HER2 & Herceptin", "CYP2C19 & Plavix", "Companion diagnostics"],
     notes: [
       "**Definitions** — Personalised Medicine: preventative care and drug therapy based on an individual's genetic information. Precision Medicine: tailoring treatment to individual characteristics, classifying patients into subpopulations — 'the right medicine, at the right time, at the right dose'. P4 Medicine: Predictive, Preventive, Personalised, Participatory.",
       "**Biomarkers** — A measurable indicator of a biological state (e.g. glucose, hormone level, tumour marker, gene variant). Used for diagnosis, risk prediction, prognosis, treatment selection, pharmacogenomics, and monitoring.",
@@ -227,6 +235,8 @@ export const topics: Topic[] = [
     id: "human-brain",
     name: "The Human Brain",
     icon: "🧠",
+    lecturer: "Dr Harry Potter",
+    keyTopics: ["Four lobes", "Action potential", "Synapse & neurotransmitters", "DOHaD & epigenetics"],
     notes: [
       // Lecture 1
       "**Brain Overview** — Controls body functions (movement, cardiovascular, respiratory) and processes information (dreams, emotions, reasoning). Highly convoluted surface: ridges = gyri, valleys = sulci/fissures. Convolutions increase cortical surface area.",
@@ -292,6 +302,8 @@ export const topics: Topic[] = [
     id: "microbes-infectious-disease",
     name: "Microbes & Infectious Disease",
     icon: "🦠",
+    lecturer: "Dr Ruth Grady",
+    keyTopics: ["5 resistance mechanisms", "MRSA & C. difficile", "Phage therapy & FMT", "STI trends"],
     notes: [
       "**Types of Microorganism** — Viruses (nanometre scale, 10⁻⁹m): genetic elements that replicate inside cells; nucleic acid + protein capsid. Bacteria (micrometre, 10⁻⁶m): single-celled prokaryotes, no membrane-bound nucleus. Also fungi and parasites.",
       "**Koch's Postulates** — Framework for proving a specific microorganism causes a specific disease: 1) Found in all cases of disease, 2) Isolated in pure culture, 3) Causes disease when introduced to healthy host, 4) Re-isolated from new host.",
@@ -358,6 +370,8 @@ export const topics: Topic[] = [
     id: "conservation-biology",
     name: "Conservation Biology",
     icon: "🌿",
+    lecturer: "Dr Thomas Nuhse",
+    keyTopics: ["3 levels of biodiversity", "Extinction vortex", "Invasive species & Big Four", "30x30 target"],
     notes: [
       "**Three Levels of Biodiversity** — 1) Genetic diversity: variability of genes/alleles within a species (raw material for evolution). 2) Species diversity: variety and abundance of species in an area (richness + evenness). 3) Ecosystem diversity: variety of habitats in a region.",
       "**Measuring Species Diversity** — Species richness = number of species. Species evenness = relative abundance. Simpson's Index: probability two random individuals are different species. Shannon Index accounts for both richness and evenness.",
