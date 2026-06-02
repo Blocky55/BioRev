@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Topic } from "@/lib/topics";
 import { getStickyNotes, saveStickyNotes } from "@/lib/progress";
@@ -9,13 +9,31 @@ interface NotesProps {
   topic: Topic;
 }
 
+/**
+ * Render markdown-lite note strings into HTML.
+ * Handles **bold** → neon-green strong tags.
+ * Only colourises the FIRST em-dash in a note (the title separator)
+ * to avoid painting every dash in detailed lecture content.
+ */
+function renderNote(note: string): string {
+  let html = note.replace(/\*\*(.*?)\*\*/g, '<strong class="text-neon-green font-semibold">$1</strong>');
+  // Only colour the first em-dash (title separator)
+  html = html.replace(/—/, '<span class="text-hot-pink"> — </span>');
+  return html;
+}
+
 export function Notes({ topic }: NotesProps) {
   const [userNotes, setUserNotes] = useState("");
   const [showToast, setShowToast] = useState(false);
+  const hasLoadedRef = useRef(false);
   const MAX_CHARS = 2000;
 
+  // Load saved notes on topic change
   useEffect(() => {
+    hasLoadedRef.current = false;
     setUserNotes(getStickyNotes(topic.id));
+    // Small delay so the initial load doesn't trigger save
+    requestAnimationFrame(() => { hasLoadedRef.current = true; });
   }, [topic.id]);
 
   const handleSave = useCallback((value: string) => {
@@ -24,9 +42,11 @@ export function Notes({ topic }: NotesProps) {
     setTimeout(() => setShowToast(false), 2000);
   }, [topic.id]);
 
+  // Debounced auto-save — only after user has actually typed
   useEffect(() => {
+    if (!hasLoadedRef.current) return;
     const timeout = setTimeout(() => {
-      if (userNotes) handleSave(userNotes);
+      handleSave(userNotes);
     }, 1000);
     return () => clearTimeout(timeout);
   }, [userNotes, handleSave]);
@@ -47,16 +67,12 @@ export function Notes({ topic }: NotesProps) {
               key={i}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.05, type: "spring", stiffness: 300, damping: 30 }}
+              transition={{ delay: i * 0.03, type: "spring", stiffness: 300, damping: 30 }}
               className="p-4 bg-navy-lighter rounded border border-neon-green/10 hover:border-neon-green/30 transition-colors"
             >
               <p
                 className="text-sm text-gray-200 leading-relaxed"
-                dangerouslySetInnerHTML={{
-                  __html: note
-                    .replace(/\*\*(.*?)\*\*/g, '<strong class="text-neon-green font-semibold">$1</strong>')
-                    .replace(/—/g, '<span class="text-hot-pink"> — </span>')
-                }}
+                dangerouslySetInnerHTML={{ __html: renderNote(note) }}
               />
             </motion.div>
           ))}

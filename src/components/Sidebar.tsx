@@ -32,14 +32,16 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Mobile hamburger */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 pixel-border bg-navy-light"
-        aria-label="Open menu"
-      >
-        <span className="font-pixel text-neon-green text-xs">☰</span>
-      </button>
+      {/* Mobile hamburger — hidden when sidebar is open */}
+      {!isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="lg:hidden fixed top-3 left-4 z-50 p-2 pixel-border bg-navy-light"
+          aria-label="Open menu"
+        >
+          <span className="font-pixel text-neon-green text-xs">☰</span>
+        </button>
+      )}
 
       {/* Mobile overlay */}
       <AnimatePresence>

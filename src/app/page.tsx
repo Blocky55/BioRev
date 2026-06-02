@@ -31,10 +31,11 @@ export default function Home() {
     setStats(s);
   }, []);
 
-  const totalFlashcardsKnown = Object.values(stats).reduce(
-    (sum, s) => sum + Math.round((s.flashcardProgress / 100) * (topics.find((t) => stats[t.id] === s)?.flashcards.length ?? 0)),
-    0
-  );
+  const totalFlashcardsKnown = topics.reduce((sum, topic) => {
+    const s = stats[topic.id];
+    if (!s) return sum;
+    return sum + Math.round((s.flashcardProgress / 100) * topic.flashcards.length);
+  }, 0);
   const totalFlashcards = topics.reduce((sum, t) => sum + t.flashcards.length, 0);
   const totalQuizzesCompleted = Object.values(stats).reduce((sum, s) => sum + s.quizzesCompleted, 0);
 

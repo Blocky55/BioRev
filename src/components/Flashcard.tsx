@@ -130,7 +130,8 @@ export function Flashcard({ topic }: FlashcardProps) {
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentIndex, remainingCards.length]);
 
   if (allDone) {
     return (
