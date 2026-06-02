@@ -69,13 +69,25 @@ export function Navbar() {
           ))}
         </div>
 
-        {/* Desktop CTA */}
-        <a
-          href="#topics"
-          className="hidden md:inline-flex px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-hover transition-colors"
-        >
-          Start learning
-        </a>
+        {/* Desktop right */}
+        <div className="hidden md:flex items-center gap-3">
+          <button
+            onClick={() => window.dispatchEvent(new Event("toggle-profile"))}
+            className="w-9 h-9 flex items-center justify-center text-text-secondary hover:text-text-primary rounded-lg hover:bg-surface-secondary transition-colors"
+            aria-label="Open profile"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="5.5" r="2.5" stroke="currentColor" strokeWidth="1.2" />
+              <path d="M3 14c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+            </svg>
+          </button>
+          <a
+            href="#topics"
+            className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-hover transition-colors"
+          >
+            Start learning
+          </a>
+        </div>
 
         {/* Mobile menu button — 44px touch target */}
         <button
@@ -126,6 +138,20 @@ export function Navbar() {
                   {link.label}
                 </a>
               ))}
+              <button
+                onClick={() => {
+                  setMobileOpen(false);
+                  window.dispatchEvent(new Event("toggle-profile"));
+                }}
+                className="flex items-center min-h-[48px] px-2 gap-2.5 text-[15px] text-text-secondary
+                  hover:text-text-primary active:bg-surface-secondary rounded-lg transition-colors"
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="5.5" r="2.5" stroke="currentColor" strokeWidth="1.2" />
+                  <path d="M3 14c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                </svg>
+                Profile
+              </button>
               <a
                 href="#topics"
                 onClick={() => setMobileOpen(false)}

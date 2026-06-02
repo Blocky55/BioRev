@@ -6,9 +6,14 @@ import { Topic, QuizQuestion } from "@/lib/topics";
 import {
   getQuizProgress,
   saveQuizRound,
+  resetQuizProgress,
+  saveQuizSession,
+  getQuizSession,
+  clearQuizSession,
   QuizProgress,
   QuizQuestionStat,
 } from "@/lib/progress";
+import { ConfirmModal } from "@/components/ConfirmModal";
 
 interface QuizProps {
   topic: Topic;
@@ -43,7 +48,6 @@ function getGrade(percentage: number): { letter: string; message: string; color:
   return { letter: "F", message: "Review the notes and try again.", color: "text-danger" };
 }
 
-/** Pick questions based on mode + past performance */
 function selectQuestions(
   pool: QuizQuestion[],
   mode: QuizMode,
@@ -56,37 +60,25 @@ function selectQuestions(
     const sorted = seen.sort((a, b) => {
       const aAcc = stats[a.id].correct / stats[a.id].asked;
       const bAcc = stats[b.id].correct / stats[b.id].asked;
-      return aAcc - bAcc; // worst first
+      return aAcc - bAcc;
     });
     const pick = sorted.slice(0, ROUND_SIZE);
     return shuffleArray(pick.length > 0 ? pick : pool.slice(0, ROUND_SIZE));
   }
 
-  // Quick round — prioritise unseen, then weak, then the rest
   const unseen: QuizQuestion[] = [];
   const weak: QuizQuestion[] = [];
   const ok: QuizQuestion[] = [];
-
   pool.forEach((q) => {
     const s = stats[q.id];
-    if (!s || s.asked === 0) {
-      unseen.push(q);
-    } else if (s.correct / s.asked < 0.7) {
-      weak.push(q);
-    } else {
-      ok.push(q);
-    }
+    if (!s || s.asked === 0) unseen.push(q);
+    else if (s.correct / s.asked < 0.7) weak.push(q);
+    else ok.push(q);
   });
-
-  const ordered = [
-    ...shuffleArray(unseen),
-    ...shuffleArray(weak),
-    ...shuffleArray(ok),
-  ];
+  const ordered = [...shuffleArray(unseen), ...shuffleArray(weak), ...shuffleArray(ok)];
   return ordered.slice(0, ROUND_SIZE);
 }
 
-/** Detect touch device */
 function useIsTouchDevice() {
   const [isTouch, setIsTouch] = useState(false);
   useEffect(() => {
@@ -99,9 +91,9 @@ export function Quiz({ topic }: QuizProps) {
   const [phase, setPhase] = useState<Phase>("select");
   const [mode, setMode] = useState<QuizMode>("quick");
   const [progress, setProgress] = useState<QuizProgress | null>(null);
+  const [showResetModal, setShowResetModal] = useState(false);
   const isTouch = useIsTouchDevice();
 
-  // Active quiz state
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -109,9 +101,48 @@ export function Quiz({ topic }: QuizProps) {
   const [showResult, setShowResult] = useState(false);
   const [answers, setAnswers] = useState<AnswerRecord[]>([]);
 
+  // Load progress + restore active session on mount / topic change
   useEffect(() => {
-    setProgress(getQuizProgress(topic.id));
-  }, [topic.id]);
+    // Reset local state for new topic
+    setPhase("select");
+    setQuestions([]);
+    setCurrentIndex(0);
+    setScore(0);
+    setSelectedAnswer(null);
+    setShowResult(false);
+    setAnswers([]);
+    setShowResetModal(false);
+
+    const prog = getQuizProgress(topic.id);
+    setProgress(prog);
+
+    // Restore active session if one exists (survives page navigation)
+    const session = getQuizSession(topic.id);
+    if (session) {
+      const questionMap = new Map(topic.quiz.map((q) => [q.id, q]));
+      const restored = session.questionIds
+        .map((id) => questionMap.get(id))
+        .filter((q): q is QuizQuestion => !!q);
+
+      if (restored.length === session.questionIds.length) {
+        setMode(session.mode as QuizMode);
+        setQuestions(restored);
+        setCurrentIndex(session.currentIndex);
+        setScore(session.score);
+        setAnswers(
+          session.answers
+            .map((a) => {
+              const q = questionMap.get(a.questionId);
+              return q ? { question: q, selected: a.selected, correct: a.correct } : null;
+            })
+            .filter((a): a is AnswerRecord => !!a)
+        );
+        setSelectedAnswer(null);
+        setShowResult(false);
+        setPhase("active");
+      }
+    }
+  }, [topic.id, topic.quiz]);
 
   const poolSize = topic.quiz.length;
 
@@ -119,9 +150,10 @@ export function Quiz({ topic }: QuizProps) {
     if (!progress) return { seen: 0, accuracy: 0, weakCount: 0 };
     const qs = progress.questionStats;
     const seen = Object.values(qs).filter((s) => s.asked > 0).length;
-    const accuracy = progress.totalAnswered > 0
-      ? Math.round((progress.totalCorrect / progress.totalAnswered) * 100)
-      : 0;
+    const accuracy =
+      progress.totalAnswered > 0
+        ? Math.round((progress.totalCorrect / progress.totalAnswered) * 100)
+        : 0;
     const weakCount = Object.values(qs).filter(
       (s) => s.asked > 0 && s.correct / s.asked < 0.7
     ).length;
@@ -139,41 +171,73 @@ export function Quiz({ topic }: QuizProps) {
     setShowResult(false);
     setAnswers([]);
     setPhase("active");
+
+    // Save initial session
+    saveQuizSession({
+      topicId: topic.id,
+      mode: selectedMode,
+      questionIds: picked.map((q) => q.id),
+      currentIndex: 0,
+      score: 0,
+      answers: [],
+    });
   };
 
-  const handleAnswer = useCallback((index: number) => {
-    if (selectedAnswer !== null) return;
-    setSelectedAnswer(index);
-    setShowResult(true);
+  const handleAnswer = useCallback(
+    (index: number) => {
+      if (selectedAnswer !== null) return;
+      setSelectedAnswer(index);
+      setShowResult(true);
 
-    const current = questions[currentIndex];
-    const isCorrect = index === current.correctIndex;
-    if (isCorrect) setScore((s) => s + 1);
+      const current = questions[currentIndex];
+      const isCorrect = index === current.correctIndex;
+      if (isCorrect) setScore((s) => s + 1);
 
-    setAnswers((prev) => [
-      ...prev,
-      { question: current, selected: index, correct: isCorrect },
-    ]);
+      const newAnswers: AnswerRecord[] = [
+        ...answers,
+        { question: current, selected: index, correct: isCorrect },
+      ];
+      setAnswers(newAnswers);
 
-    setTimeout(() => {
-      if (currentIndex < questions.length - 1) {
-        setCurrentIndex((i) => i + 1);
-        setSelectedAnswer(null);
-        setShowResult(false);
-      } else {
-        const finalScore = isCorrect ? score + 1 : score;
-        const results = [
-          ...answers,
-          { question: current, selected: index, correct: isCorrect },
-        ].map((a) => ({ id: a.question.id, correct: a.correct }));
+      const newScore = isCorrect ? score + 1 : score;
 
-        saveQuizRound(topic.id, finalScore, questions.length, results);
-        setProgress(getQuizProgress(topic.id));
-        setPhase("results");
-      }
-    }, 1200);
-  }, [selectedAnswer, questions, currentIndex, score, answers, topic.id]);
+      setTimeout(() => {
+        if (currentIndex < questions.length - 1) {
+          const nextIndex = currentIndex + 1;
+          setCurrentIndex(nextIndex);
+          setSelectedAnswer(null);
+          setShowResult(false);
 
+          // Persist session so page navigation doesn't lose progress
+          saveQuizSession({
+            topicId: topic.id,
+            mode,
+            questionIds: questions.map((q) => q.id),
+            currentIndex: nextIndex,
+            score: newScore,
+            answers: newAnswers.map((a) => ({
+              questionId: a.question.id,
+              selected: a.selected,
+              correct: a.correct,
+            })),
+          });
+        } else {
+          // Round complete — save results and clear session
+          clearQuizSession(topic.id);
+          const results = newAnswers.map((a) => ({
+            id: a.question.id,
+            correct: a.correct,
+          }));
+          saveQuizRound(topic.id, newScore, questions.length, results);
+          setProgress(getQuizProgress(topic.id));
+          setPhase("results");
+        }
+      }, 1200);
+    },
+    [selectedAnswer, questions, currentIndex, score, answers, topic.id, mode]
+  );
+
+  // Keyboard shortcuts (desktop only)
   useEffect(() => {
     if (phase !== "active") return;
     const handleKey = (e: KeyboardEvent) => {
@@ -185,6 +249,16 @@ export function Quiz({ topic }: QuizProps) {
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [handleAnswer, phase, currentIndex, questions]);
+
+  // ── Reset handler ──
+  const handleResetProgress = () => {
+    resetQuizProgress(topic.id);
+    setProgress(getQuizProgress(topic.id));
+    setPhase("select");
+    setQuestions([]);
+    setAnswers([]);
+    setShowResetModal(false);
+  };
 
   // ─── Mode Selection ───
   if (phase === "select") {
@@ -232,7 +306,10 @@ export function Quiz({ topic }: QuizProps) {
               <p className="text-[11px] text-text-muted mt-0.5">Overall accuracy</p>
             </div>
             <div className="p-3 bg-surface rounded-xl border border-border">
-              <p className="text-lg sm:text-xl font-bold text-text-primary">{stats.seen}<span className="text-text-muted font-normal text-xs sm:text-sm">/{poolSize}</span></p>
+              <p className="text-lg sm:text-xl font-bold text-text-primary">
+                {stats.seen}
+                <span className="text-text-muted font-normal text-xs sm:text-sm">/{poolSize}</span>
+              </p>
               <p className="text-[11px] text-text-muted mt-0.5">Questions seen</p>
             </div>
             <div className="p-3 bg-surface rounded-xl border border-border">
@@ -270,6 +347,27 @@ export function Quiz({ topic }: QuizProps) {
             </motion.button>
           ))}
         </div>
+
+        {/* Reset progress (only show if there's history) */}
+        {progress && progress.roundsCompleted > 0 && (
+          <div className="mt-6 pt-4 border-t border-border">
+            <button
+              onClick={() => setShowResetModal(true)}
+              className="min-h-[44px] text-[13px] text-danger hover:text-red-700 active:text-red-700 transition-colors"
+            >
+              Reset quiz progress
+            </button>
+          </div>
+        )}
+
+        <ConfirmModal
+          open={showResetModal}
+          title="Reset Quiz Progress"
+          message="This will clear all quiz history, scores, and badges for this topic. This cannot be undone."
+          confirmLabel="Reset"
+          onConfirm={handleResetProgress}
+          onCancel={() => setShowResetModal(false)}
+        />
       </motion.div>
     );
   }
@@ -306,25 +404,19 @@ export function Quiz({ topic }: QuizProps) {
                   <span className="text-[11px] font-medium text-danger bg-danger-light px-1.5 py-0.5 rounded mt-0.5 flex-shrink-0">
                     Yours
                   </span>
-                  <p className="text-[13px] text-danger">
-                    {a.question.options[a.selected]}
-                  </p>
+                  <p className="text-[13px] text-danger">{a.question.options[a.selected]}</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="text-[11px] font-medium text-success bg-success-light px-1.5 py-0.5 rounded mt-0.5 flex-shrink-0">
                     Correct
                   </span>
-                  <p className="text-[13px] text-success">
-                    {a.question.options[a.question.correctIndex]}
-                  </p>
+                  <p className="text-[13px] text-success">{a.question.options[a.question.correctIndex]}</p>
                 </div>
               </div>
             </div>
           ))}
           {mistakes.length === 0 && (
-            <p className="text-sm text-text-muted text-center py-8">
-              No mistakes this round. Well done.
-            </p>
+            <p className="text-sm text-text-muted text-center py-8">No mistakes this round. Well done.</p>
           )}
         </div>
       </motion.div>
@@ -338,9 +430,10 @@ export function Quiz({ topic }: QuizProps) {
     const percentage = totalQ > 0 ? (finalScore / totalQ) * 100 : 0;
     const grade = getGrade(percentage);
     const mistakeCount = totalQ - finalScore;
-    const overallAcc = progress && progress.totalAnswered > 0
-      ? Math.round((progress.totalCorrect / progress.totalAnswered) * 100)
-      : 0;
+    const overallAcc =
+      progress && progress.totalAnswered > 0
+        ? Math.round((progress.totalCorrect / progress.totalAnswered) * 100)
+        : 0;
 
     return (
       <motion.div
@@ -352,9 +445,7 @@ export function Quiz({ topic }: QuizProps) {
         <h3 className="text-lg font-semibold text-text-primary mb-5 sm:mb-6">Round complete</h3>
 
         <div className="bg-surface rounded-2xl border border-border shadow-md p-6 sm:p-8 text-center w-full max-w-sm">
-          <div className={`text-4xl sm:text-5xl font-bold ${grade.color} mb-2`}>
-            {grade.letter}
-          </div>
+          <div className={`text-4xl sm:text-5xl font-bold ${grade.color} mb-2`}>{grade.letter}</div>
           <p className="text-xl sm:text-2xl font-semibold text-text-primary mb-1">
             {finalScore}/{totalQ}
           </p>
@@ -366,7 +457,9 @@ export function Quiz({ topic }: QuizProps) {
               <p className="text-[11px] text-text-muted">Overall accuracy</p>
             </div>
             <div>
-              <p className="text-lg sm:text-xl font-bold text-text-primary">{progress?.bestRoundScore ?? 0}/{progress?.bestRoundTotal ?? 0}</p>
+              <p className="text-lg sm:text-xl font-bold text-text-primary">
+                {progress?.bestRoundScore ?? 0}/{progress?.bestRoundTotal ?? 0}
+              </p>
               <p className="text-[11px] text-text-muted">Personal best</p>
             </div>
           </div>
@@ -397,7 +490,7 @@ export function Quiz({ topic }: QuizProps) {
           ))}
         </div>
 
-        {/* Actions — stack vertically on mobile */}
+        {/* Actions */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-center gap-2 sm:gap-3 mt-6 sm:mt-8 w-full max-w-sm sm:max-w-none">
           <motion.button
             whileTap={{ scale: 0.98 }}
@@ -448,7 +541,10 @@ export function Quiz({ topic }: QuizProps) {
           {modeLabel}
         </span>
         <button
-          onClick={() => setPhase("select")}
+          onClick={() => {
+            clearQuizSession(topic.id);
+            setPhase("select");
+          }}
           className="text-[12px] sm:text-[13px] text-text-muted hover:text-danger active:text-danger transition-colors min-h-[32px] flex items-center"
         >
           Quit
@@ -481,7 +577,8 @@ export function Quiz({ topic }: QuizProps) {
 
           <div className="grid gap-2.5 sm:gap-3">
             {currentQuestion.options.map((option, i) => {
-              let containerClass = "bg-surface border-border hover:border-primary/40 hover:shadow active:bg-surface-secondary";
+              let containerClass =
+                "bg-surface border-border hover:border-primary/40 hover:shadow active:bg-surface-secondary";
               let textClass = "text-text-primary";
               let numberClass = "text-text-muted bg-surface-secondary";
 
@@ -515,7 +612,9 @@ export function Quiz({ topic }: QuizProps) {
                   className={`flex items-center gap-3 sm:gap-4 p-3.5 sm:p-4 border rounded-xl text-left
                     transition-all duration-200 min-h-[52px] ${containerClass}`}
                 >
-                  <span className={`text-[12px] font-semibold w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${numberClass}`}>
+                  <span
+                    className={`text-[12px] font-semibold w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${numberClass}`}
+                  >
                     {i + 1}
                   </span>
                   <span className={`text-[13px] sm:text-[14px] ${textClass}`}>{option}</span>
@@ -524,11 +623,8 @@ export function Quiz({ topic }: QuizProps) {
             })}
           </div>
 
-          {/* Keyboard hint — only on desktop (non-touch) */}
           {!isTouch && (
-            <p className="text-center text-[11px] text-text-muted mt-4 sm:mt-5">
-              Press 1-4 to answer
-            </p>
+            <p className="text-center text-[11px] text-text-muted mt-4 sm:mt-5">Press 1-4 to answer</p>
           )}
         </motion.div>
       </AnimatePresence>

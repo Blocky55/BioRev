@@ -3,7 +3,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Topic } from "@/lib/topics";
-import { getFlashcardProgress, saveFlashcardProgress } from "@/lib/progress";
+import {
+  getFlashcardProgress,
+  saveFlashcardProgress,
+  resetFlashcardProgress,
+} from "@/lib/progress";
+import { ConfirmModal } from "@/components/ConfirmModal";
 
 interface FlashcardProps {
   topic: Topic;
@@ -39,7 +44,6 @@ function ConfettiEffect() {
   );
 }
 
-/** Check if device supports touch */
 function useIsTouchDevice() {
   const [isTouch, setIsTouch] = useState(false);
   useEffect(() => {
@@ -56,6 +60,7 @@ export function Flashcard({ topic }: FlashcardProps) {
   const [learning, setLearning] = useState<string[]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
   const [allDone, setAllDone] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
   const isTouch = useIsTouchDevice();
 
   useEffect(() => {
@@ -69,9 +74,12 @@ export function Flashcard({ topic }: FlashcardProps) {
   const totalCards = topic.flashcards.length;
   const knownCount = known.length;
 
-  const save = useCallback((newKnown: string[], newLearning: string[]) => {
-    saveFlashcardProgress(topic.id, { known: newKnown, learning: newLearning });
-  }, [topic.id]);
+  const save = useCallback(
+    (newKnown: string[], newLearning: string[]) => {
+      saveFlashcardProgress(topic.id, { known: newKnown, learning: newLearning });
+    },
+    [topic.id]
+  );
 
   const handleKnown = () => {
     if (!currentCard) return;
@@ -93,7 +101,9 @@ export function Flashcard({ topic }: FlashcardProps) {
 
   const handleLearning = () => {
     if (!currentCard) return;
-    const newLearning = learning.includes(currentCard.id) ? learning : [...learning, currentCard.id];
+    const newLearning = learning.includes(currentCard.id)
+      ? learning
+      : [...learning, currentCard.id];
     setLearning(newLearning);
     save(known, newLearning);
     setIsFlipped(false);
@@ -121,12 +131,15 @@ export function Flashcard({ topic }: FlashcardProps) {
     setIsFlipped(false);
   };
 
-  const handleReset = () => {
+  // Confirmed reset — clears all mastered/learning state
+  const confirmReset = () => {
+    resetFlashcardProgress(topic.id);
     setKnown([]);
     setLearning([]);
     setAllDone(false);
     setCurrentIndex(0);
-    save([], []);
+    setIsFlipped(false);
+    setShowResetModal(false);
   };
 
   useEffect(() => {
@@ -143,53 +156,75 @@ export function Flashcard({ topic }: FlashcardProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex, remainingCards.length]);
 
+  // ── Deck Complete ──
   if (allDone) {
     return (
-      <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="flex flex-col items-center justify-center py-12 sm:py-16"
-      >
-        {showConfetti && <ConfettiEffect />}
-        <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary-light rounded-2xl flex items-center justify-center mb-5 sm:mb-6">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="sm:w-7 sm:h-7">
-            <path d="M9 12l2 2 4-4" stroke="#047857" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            <circle cx="12" cy="12" r="10" stroke="#047857" strokeWidth="2" />
-          </svg>
-        </div>
-        <h3 className="text-lg sm:text-xl font-semibold text-text-primary mb-2">
-          Deck complete
-        </h3>
-        <p className="text-text-secondary text-[14px] sm:text-sm text-center mb-6 sm:mb-8 max-w-sm px-4">
-          You&apos;ve mastered all {totalCards} flashcards in this topic.
-        </p>
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={handleReset}
-          className="min-h-[44px] px-5 py-2.5 bg-surface text-danger text-sm font-medium rounded-lg
-            border border-danger/20 hover:bg-danger-light active:bg-danger-light transition-colors"
+      <>
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="flex flex-col items-center justify-center py-12 sm:py-16"
         >
-          Reset and study again
-        </motion.button>
-      </motion.div>
+          {showConfetti && <ConfettiEffect />}
+          <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary-light rounded-2xl flex items-center justify-center mb-5 sm:mb-6">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="sm:w-7 sm:h-7">
+              <path d="M9 12l2 2 4-4" stroke="#047857" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <circle cx="12" cy="12" r="10" stroke="#047857" strokeWidth="2" />
+            </svg>
+          </div>
+          <h3 className="text-lg sm:text-xl font-semibold text-text-primary mb-2">Deck complete</h3>
+          <p className="text-text-secondary text-[14px] sm:text-sm text-center mb-6 sm:mb-8 max-w-sm px-4">
+            You&apos;ve mastered all {totalCards} flashcards in this topic.
+          </p>
+          <motion.button
+            whileTap={{ scale: 0.98 }}
+            onClick={() => setShowResetModal(true)}
+            className="min-h-[44px] px-5 py-2.5 bg-surface text-danger text-sm font-medium rounded-lg
+              border border-danger/20 hover:bg-danger-light active:bg-danger-light transition-colors"
+          >
+            Reset and study again
+          </motion.button>
+        </motion.div>
+
+        <ConfirmModal
+          open={showResetModal}
+          title="Reset Flashcard Progress"
+          message="This will clear all mastered and learning cards. You'll start from scratch."
+          confirmLabel="Reset"
+          onConfirm={confirmReset}
+          onCancel={() => setShowResetModal(false)}
+        />
+      </>
     );
   }
 
+  // ── Empty State ──
   if (!currentCard) {
     return (
-      <div className="text-center py-12 sm:py-16">
-        <p className="text-text-muted text-sm">No cards remaining.</p>
-        <button
-          onClick={handleReset}
-          className="mt-4 min-h-[44px] text-sm text-primary hover:text-primary-hover underline underline-offset-2 transition-colors"
-        >
-          Reset deck
-        </button>
-      </div>
+      <>
+        <div className="text-center py-12 sm:py-16">
+          <p className="text-text-muted text-sm">No cards remaining.</p>
+          <button
+            onClick={() => setShowResetModal(true)}
+            className="mt-4 min-h-[44px] text-sm text-primary hover:text-primary-hover underline underline-offset-2 transition-colors"
+          >
+            Reset deck
+          </button>
+        </div>
+
+        <ConfirmModal
+          open={showResetModal}
+          title="Reset Flashcard Progress"
+          message="This will clear all mastered and learning cards. You'll start from scratch."
+          confirmLabel="Reset"
+          onConfirm={confirmReset}
+          onCancel={() => setShowResetModal(false)}
+        />
+      </>
     );
   }
 
+  // ── Active Flashcard ──
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -219,41 +254,24 @@ export function Flashcard({ topic }: FlashcardProps) {
       </div>
 
       {/* Flashcard */}
-      <div
-        className="card-3d cursor-pointer mx-auto max-w-xl"
-        onClick={() => setIsFlipped(!isFlipped)}
-      >
+      <div className="card-3d cursor-pointer mx-auto max-w-xl" onClick={() => setIsFlipped(!isFlipped)}>
         <div className={`card-3d-inner relative w-full min-h-[220px] sm:min-h-[280px] ${isFlipped ? "flipped" : ""}`}>
-          {/* Front */}
-          <div className="card-3d-front absolute inset-0 p-5 sm:p-8 bg-surface rounded-2xl border border-border shadow-md
-            flex flex-col items-center justify-center">
-            <span className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-3 sm:mb-4">
-              Question
-            </span>
-            <p className="text-[15px] sm:text-lg text-center text-text-primary leading-relaxed">
-              {currentCard.front}
-            </p>
+          <div className="card-3d-front absolute inset-0 p-5 sm:p-8 bg-surface rounded-2xl border border-border shadow-md flex flex-col items-center justify-center">
+            <span className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-3 sm:mb-4">Question</span>
+            <p className="text-[15px] sm:text-lg text-center text-text-primary leading-relaxed">{currentCard.front}</p>
             <span className="text-[11px] text-text-muted mt-4 sm:mt-6">
               {isTouch ? "Tap to flip" : "Click to flip"}
             </span>
           </div>
-
-          {/* Back */}
-          <div className="card-3d-back absolute inset-0 p-5 sm:p-8 bg-primary-light rounded-2xl border border-primary/15 shadow-md
-            flex flex-col items-center justify-center">
-            <span className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-3 sm:mb-4">
-              Answer
-            </span>
-            <p className="text-[15px] sm:text-lg text-center text-text-primary leading-relaxed">
-              {currentCard.back}
-            </p>
+          <div className="card-3d-back absolute inset-0 p-5 sm:p-8 bg-primary-light rounded-2xl border border-primary/15 shadow-md flex flex-col items-center justify-center">
+            <span className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-3 sm:mb-4">Answer</span>
+            <p className="text-[15px] sm:text-lg text-center text-text-primary leading-relaxed">{currentCard.back}</p>
           </div>
         </div>
       </div>
 
-      {/* Controls — mobile: 2-row layout, desktop: inline */}
+      {/* Controls */}
       <div className="mt-6 sm:mt-8">
-        {/* Row 1: Knowledge buttons (always visible, full width on mobile) */}
         <div className="grid grid-cols-2 sm:flex sm:justify-center gap-2 sm:gap-3">
           <motion.button
             whileTap={{ scale: 0.97 }}
@@ -264,7 +282,6 @@ export function Flashcard({ topic }: FlashcardProps) {
           >
             Still learning
           </motion.button>
-
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={handleKnown}
@@ -276,17 +293,15 @@ export function Flashcard({ topic }: FlashcardProps) {
           </motion.button>
         </div>
 
-        {/* Row 2: Navigation + shuffle */}
         <div className="flex items-center justify-center gap-2 sm:gap-3 mt-3">
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={handlePrev}
             className="min-h-[44px] px-4 py-2 text-[13px] font-medium bg-surface rounded-lg border border-border
-              text-text-secondary hover:bg-surface-secondary active:bg-surface-secondary hover:text-text-primary transition-all"
+              text-text-secondary hover:bg-surface-secondary active:bg-surface-secondary transition-all"
           >
             Prev
           </motion.button>
-
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={handleShuffle}
@@ -294,17 +309,37 @@ export function Flashcard({ topic }: FlashcardProps) {
           >
             Shuffle
           </motion.button>
-
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={handleNext}
             className="min-h-[44px] px-4 py-2 text-[13px] font-medium bg-surface rounded-lg border border-border
-              text-text-secondary hover:bg-surface-secondary active:bg-surface-secondary hover:text-text-primary transition-all"
+              text-text-secondary hover:bg-surface-secondary active:bg-surface-secondary transition-all"
           >
             Next
           </motion.button>
         </div>
+
+        {/* Reset progress link */}
+        {knownCount > 0 && (
+          <div className="text-center mt-4 pt-3 border-t border-border">
+            <button
+              onClick={() => setShowResetModal(true)}
+              className="text-[12px] text-danger hover:text-red-700 active:text-red-700 transition-colors min-h-[32px]"
+            >
+              Reset progress
+            </button>
+          </div>
+        )}
       </div>
+
+      <ConfirmModal
+        open={showResetModal}
+        title="Reset Flashcard Progress"
+        message="This will clear all mastered and learning cards. You'll start from scratch."
+        confirmLabel="Reset"
+        onConfirm={confirmReset}
+        onCancel={() => setShowResetModal(false)}
+      />
     </motion.div>
   );
 }

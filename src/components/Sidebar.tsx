@@ -109,7 +109,7 @@ export function Sidebar() {
             </div>
             <div>
               <h1 className="font-semibold text-text-primary text-[15px] leading-tight">BioRevise</h1>
-              <p className="text-[11px] text-text-muted leading-tight">UCIL20892</p>
+              <p className="text-[11px] text-text-muted leading-tight">Biology Revision</p>
             </div>
           </Link>
 
@@ -179,9 +179,19 @@ export function Sidebar() {
         </nav>
 
         {/* Footer */}
-        <div className="px-4 sm:px-5 py-4 border-t border-border safe-bottom">
-          <p className="text-[11px] text-text-muted">Biology for Curious Minds</p>
-          <p className="text-[11px] text-text-muted">University of Manchester</p>
+        <div className="px-4 sm:px-5 py-4 border-t border-border safe-bottom flex items-center justify-between">
+          <p className="text-[11px] text-text-muted">Made by AL</p>
+          <button
+            onClick={() => window.dispatchEvent(new Event("toggle-profile"))}
+            className="w-9 h-9 flex items-center justify-center text-text-muted
+              hover:text-text-primary rounded-lg active:bg-surface-secondary transition-colors"
+            aria-label="Open profile"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="5.5" r="2.5" stroke="currentColor" strokeWidth="1.2" />
+              <path d="M3 14c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+            </svg>
+          </button>
         </div>
       </aside>
     </>
