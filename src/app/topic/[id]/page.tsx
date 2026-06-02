@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { topics } from "@/lib/topics";
 import { Notes } from "@/components/Notes";
 import { Flashcard } from "@/components/Flashcard";
@@ -86,20 +86,16 @@ export default function TopicPage() {
         </div>
       </div>
 
-      {/* Tab content */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.25 }}
-        >
-          {activeTab === "notes" && <Notes topic={topic} />}
-          {activeTab === "flashcards" && <Flashcard topic={topic} />}
-          {activeTab === "quiz" && <Quiz topic={topic} />}
-        </motion.div>
-      </AnimatePresence>
+      {/* Tab content — all tabs stay mounted to preserve state (quiz progress, flashcard position) */}
+      <div className={activeTab === "notes" ? "" : "hidden"}>
+        <Notes topic={topic} />
+      </div>
+      <div className={activeTab === "flashcards" ? "" : "hidden"}>
+        <Flashcard topic={topic} />
+      </div>
+      <div className={activeTab === "quiz" ? "" : "hidden"}>
+        <Quiz topic={topic} />
+      </div>
 
       <BackToTop />
     </div>

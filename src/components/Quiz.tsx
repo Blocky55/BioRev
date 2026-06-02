@@ -447,9 +447,12 @@ export function Quiz({ topic }: QuizProps) {
         <span className="text-[11px] sm:text-[12px] text-text-muted px-2 py-0.5 bg-surface-secondary rounded">
           {modeLabel}
         </span>
-        <span className="text-[12px] sm:text-[13px] text-text-muted">
-          {currentIndex + 1}/{questions.length}
-        </span>
+        <button
+          onClick={() => setPhase("select")}
+          className="text-[12px] sm:text-[13px] text-text-muted hover:text-danger active:text-danger transition-colors min-h-[32px] flex items-center"
+        >
+          Quit
+        </button>
       </div>
 
       {/* Progress */}
