@@ -25,13 +25,13 @@ export function BackToTop() {
           whileTap={{ scale: 0.95 }}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="fixed bottom-6 right-6 z-40 w-10 h-10 flex items-center justify-center
-            bg-surface rounded-xl border border-border shadow-figma
-            text-text-secondary hover:text-accent hover:border-accent/30 hover:shadow-figma-md
+            bg-surface rounded-xl border border-border shadow
+            text-text-secondary hover:text-primary hover:border-primary/30 hover:shadow-md
             transition-all duration-200"
           aria-label="Back to top"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M8 12V4M8 4L4 8M8 4l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M8 12V4M8 4L4 8M8 4l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </motion.button>
       )}

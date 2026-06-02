@@ -9,24 +9,31 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Figma-inspired palette
+        // Biology-inspired palette
         surface: "#FFFFFF",
-        "surface-secondary": "#F5F5F5",
-        "surface-tertiary": "#EBEBEB",
-        border: "#E5E5E5",
-        "border-strong": "#D4D4D4",
-        "text-primary": "#1E1E1E",
-        "text-secondary": "#6B6B6B",
-        "text-muted": "#999999",
-        accent: "#7B61FF",        // Figma purple
-        "accent-light": "#EDE9FE",
-        "accent-hover": "#6B4EE6",
-        success: "#14AE5C",
-        "success-light": "#ECFDF5",
-        danger: "#F24822",
+        "surface-secondary": "#F9FAFB",
+        "surface-tertiary": "#F3F4F6",
+        border: "#E5E7EB",
+        "border-strong": "#D1D5DB",
+
+        // Primary — rich emerald green (biology, nature, cells)
+        primary: "#047857",
+        "primary-light": "#ECFDF5",
+        "primary-hover": "#065F46",
+        "primary-dark": "#064E3B",
+
+        // Semantic
+        success: "#16A34A",
+        "success-light": "#F0FDF4",
+        danger: "#DC2626",
         "danger-light": "#FEF2F2",
-        warning: "#FFCD29",
-        "warning-light": "#FFFBEB",
+        warning: "#CA8A04",
+        "warning-light": "#FEFCE8",
+
+        // Text
+        "text-primary": "#111827",
+        "text-secondary": "#4B5563",
+        "text-muted": "#9CA3AF",
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
@@ -36,10 +43,10 @@ const config: Config = {
         "2xl": "16px",
       },
       boxShadow: {
-        "figma-sm": "0 1px 2px rgba(0,0,0,0.05)",
-        figma: "0 2px 8px rgba(0,0,0,0.08)",
-        "figma-md": "0 4px 16px rgba(0,0,0,0.1)",
-        "figma-lg": "0 8px 32px rgba(0,0,0,0.12)",
+        "sm": "0 1px 2px rgba(0,0,0,0.04)",
+        "DEFAULT": "0 2px 8px rgba(0,0,0,0.06)",
+        "md": "0 4px 16px rgba(0,0,0,0.08)",
+        "lg": "0 8px 32px rgba(0,0,0,0.10)",
       },
     },
   },

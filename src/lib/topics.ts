@@ -29,7 +29,7 @@ export const topics: Topic[] = [
   {
     id: "dna-human-genome",
     name: "DNA & Human Genome Project",
-    icon: "🧬",
+    icon: "DNA",
     lecturer: "Dr Maggy Fostier",
     keyTopics: ["Mitosis vs meiosis", "SNPs & frameshifts", "GWAS & 23andMe", "Cystic Fibrosis"],
     notes: [
@@ -105,7 +105,7 @@ export const topics: Topic[] = [
   {
     id: "development-stem-cells",
     name: "Development & Stem Cells",
-    icon: "🔬",
+    icon: "DEV",
     lecturer: "Dr Maggy Fostier",
     keyTopics: ["Gastrulation & germ layers", "Potency hierarchy", "ESCs vs ASCs vs iPSCs", "Dolly & reprogramming"],
     notes: [
@@ -171,7 +171,7 @@ export const topics: Topic[] = [
   {
     id: "precision-medicine",
     name: "Precision Medicine",
-    icon: "🎯",
+    icon: "MED",
     lecturer: "Dr Shazia Hyatt",
     keyTopics: ["P4 medicine", "HER2 & Herceptin", "CYP2C19 & Plavix", "Companion diagnostics"],
     notes: [
@@ -234,7 +234,7 @@ export const topics: Topic[] = [
   {
     id: "human-brain",
     name: "The Human Brain",
-    icon: "🧠",
+    icon: "BRN",
     lecturer: "Dr Harry Potter",
     keyTopics: ["Four lobes", "Action potential", "Synapse & neurotransmitters", "DOHaD & epigenetics"],
     notes: [
@@ -301,7 +301,7 @@ export const topics: Topic[] = [
   {
     id: "microbes-infectious-disease",
     name: "Microbes & Infectious Disease",
-    icon: "🦠",
+    icon: "MCR",
     lecturer: "Dr Ruth Grady",
     keyTopics: ["5 resistance mechanisms", "MRSA & C. difficile", "Phage therapy & FMT", "STI trends"],
     notes: [
@@ -369,7 +369,7 @@ export const topics: Topic[] = [
   {
     id: "conservation-biology",
     name: "Conservation Biology",
-    icon: "🌿",
+    icon: "ECO",
     lecturer: "Dr Thomas Nuhse",
     keyTopics: ["3 levels of biodiversity", "Extinction vortex", "Invasive species & Big Four", "30x30 target"],
     notes: [

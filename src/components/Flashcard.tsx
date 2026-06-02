@@ -10,7 +10,7 @@ interface FlashcardProps {
 }
 
 function ConfettiEffect() {
-  const colors = ["#7B61FF", "#14AE5C", "#F24822", "#FFCD29", "#6B4EE6"];
+  const colors = ["#047857", "#16A34A", "#0D9488", "#CA8A04", "#065F46"];
   const particles = Array.from({ length: 50 }, (_, i) => ({
     id: i,
     x: Math.random() * 100,
@@ -141,14 +141,17 @@ export function Flashcard({ topic }: FlashcardProps) {
         className="flex flex-col items-center justify-center py-16"
       >
         {showConfetti && <ConfettiEffect />}
-        <div className="w-16 h-16 bg-accent-light rounded-2xl flex items-center justify-center mb-6">
-          <span className="text-3xl">🏆</span>
+        <div className="w-16 h-16 bg-primary-light rounded-2xl flex items-center justify-center mb-6">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <path d="M9 12l2 2 4-4" stroke="#047857" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="12" cy="12" r="10" stroke="#047857" strokeWidth="2" />
+          </svg>
         </div>
         <h3 className="text-xl font-semibold text-text-primary mb-2">
-          Deck Complete!
+          Deck complete
         </h3>
         <p className="text-text-secondary text-sm text-center mb-8 max-w-sm">
-          You&apos;ve mastered all {totalCards} flashcards in this topic!
+          You&apos;ve mastered all {totalCards} flashcards in this topic.
         </p>
         <motion.button
           whileHover={{ scale: 1.02 }}
@@ -157,7 +160,7 @@ export function Flashcard({ topic }: FlashcardProps) {
           className="px-5 py-2.5 bg-surface text-danger text-sm font-medium rounded-lg
             border border-danger/20 hover:bg-danger-light transition-colors"
         >
-          Reset & study again
+          Reset and study again
         </motion.button>
       </motion.div>
     );
@@ -166,10 +169,10 @@ export function Flashcard({ topic }: FlashcardProps) {
   if (!currentCard) {
     return (
       <div className="text-center py-16">
-        <p className="text-text-muted text-sm">No cards remaining!</p>
+        <p className="text-text-muted text-sm">No cards remaining.</p>
         <button
           onClick={handleReset}
-          className="mt-4 text-sm text-accent hover:text-accent-hover underline underline-offset-2 transition-colors"
+          className="mt-4 text-sm text-primary hover:text-primary-hover underline underline-offset-2 transition-colors"
         >
           Reset deck
         </button>
@@ -188,7 +191,7 @@ export function Flashcard({ topic }: FlashcardProps) {
       {/* Progress bar */}
       <div className="mb-8">
         <div className="flex justify-between items-center mb-2.5">
-          <span className="text-[13px] font-medium text-accent">
+          <span className="text-[13px] font-medium text-primary">
             {knownCount}/{totalCards} mastered
           </span>
           <span className="text-[13px] text-text-muted">
@@ -197,7 +200,7 @@ export function Flashcard({ topic }: FlashcardProps) {
         </div>
         <div className="h-2 bg-surface-secondary rounded-full overflow-hidden">
           <motion.div
-            className="h-full bg-accent rounded-full"
+            className="h-full bg-primary rounded-full"
             initial={{ width: 0 }}
             animate={{ width: `${(knownCount / totalCards) * 100}%` }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}
@@ -212,9 +215,9 @@ export function Flashcard({ topic }: FlashcardProps) {
       >
         <div className={`card-3d-inner relative w-full min-h-[280px] ${isFlipped ? "flipped" : ""}`}>
           {/* Front */}
-          <div className="card-3d-front absolute inset-0 p-8 bg-surface rounded-2xl border border-border shadow-figma-md
+          <div className="card-3d-front absolute inset-0 p-8 bg-surface rounded-2xl border border-border shadow-md
             flex flex-col items-center justify-center">
-            <span className="text-[11px] font-semibold text-accent uppercase tracking-wider mb-4">
+            <span className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-4">
               Question
             </span>
             <p className="text-lg text-center text-text-primary leading-relaxed">
@@ -226,9 +229,9 @@ export function Flashcard({ topic }: FlashcardProps) {
           </div>
 
           {/* Back */}
-          <div className="card-3d-back absolute inset-0 p-8 bg-accent-light rounded-2xl border border-accent/20 shadow-figma-md
+          <div className="card-3d-back absolute inset-0 p-8 bg-primary-light rounded-2xl border border-primary/15 shadow-md
             flex flex-col items-center justify-center">
-            <span className="text-[11px] font-semibold text-accent uppercase tracking-wider mb-4">
+            <span className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-4">
               Answer
             </span>
             <p className="text-lg text-center text-text-primary leading-relaxed">
@@ -247,7 +250,7 @@ export function Flashcard({ topic }: FlashcardProps) {
           className="px-4 py-2.5 text-[13px] font-medium bg-surface rounded-lg border border-border
             text-text-secondary hover:bg-surface-secondary hover:text-text-primary transition-all"
         >
-          <span className="mr-1">←</span> Prev
+          Prev
         </motion.button>
 
         <motion.button
@@ -269,7 +272,7 @@ export function Flashcard({ topic }: FlashcardProps) {
             bg-success-light text-success border border-success/20
             hover:bg-success/10 transition-all"
         >
-          Got it ✓
+          Got it
         </motion.button>
 
         <motion.button
@@ -279,19 +282,19 @@ export function Flashcard({ topic }: FlashcardProps) {
           className="px-4 py-2.5 text-[13px] font-medium bg-surface rounded-lg border border-border
             text-text-secondary hover:bg-surface-secondary hover:text-text-primary transition-all"
         >
-          Next <span className="ml-1">→</span>
+          Next
         </motion.button>
       </div>
 
       {/* Shuffle button */}
       <div className="text-center mt-4">
         <motion.button
-          whileHover={{ scale: 1.02, rotate: 3 }}
+          whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={handleShuffle}
-          className="text-[12px] font-medium px-4 py-2 text-text-muted hover:text-accent transition-colors"
+          className="text-[12px] font-medium px-4 py-2 text-text-muted hover:text-primary transition-colors"
         >
-          🔀 Shuffle deck
+          Shuffle deck
         </motion.button>
       </div>
     </motion.div>

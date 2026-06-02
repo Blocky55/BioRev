@@ -19,12 +19,12 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 function getGrade(percentage: number): { letter: string; message: string; color: string } {
-  if (percentage >= 90) return { letter: "A+", message: "Absolutely brilliant! You've mastered this topic!", color: "text-success" };
-  if (percentage >= 80) return { letter: "A", message: "Excellent work! Nearly perfect!", color: "text-success" };
-  if (percentage >= 70) return { letter: "B", message: "Great job! You know this well.", color: "text-accent" };
-  if (percentage >= 60) return { letter: "C", message: "Good effort! A bit more revision will help.", color: "text-accent" };
-  if (percentage >= 50) return { letter: "D", message: "You're getting there! Keep studying.", color: "text-danger" };
-  return { letter: "F", message: "Don't worry — review the notes and try again!", color: "text-danger" };
+  if (percentage >= 90) return { letter: "A+", message: "Outstanding. You've mastered this topic.", color: "text-success" };
+  if (percentage >= 80) return { letter: "A", message: "Excellent work. Nearly perfect.", color: "text-success" };
+  if (percentage >= 70) return { letter: "B", message: "Great job. You know this well.", color: "text-primary" };
+  if (percentage >= 60) return { letter: "C", message: "Good effort. A bit more revision will help.", color: "text-primary" };
+  if (percentage >= 50) return { letter: "D", message: "Getting there. Keep studying.", color: "text-danger" };
+  return { letter: "F", message: "Review the notes and try again.", color: "text-danger" };
 }
 
 export function Quiz({ topic }: QuizProps) {
@@ -98,16 +98,17 @@ export function Quiz({ topic }: QuizProps) {
         transition={{ type: "spring", stiffness: 200, damping: 20 }}
         className="flex flex-col items-center py-12"
       >
-        <div className="w-16 h-16 bg-accent-light rounded-2xl flex items-center justify-center mb-4">
-          <span className="text-3xl">
-            {percentage >= 70 ? "🎉" : percentage >= 50 ? "📚" : "💪"}
-          </span>
+        <div className="w-16 h-16 bg-primary-light rounded-2xl flex items-center justify-center mb-4">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L15 8.5L22 9.5L17 14.5L18 21.5L12 18L6 21.5L7 14.5L2 9.5L9 8.5L12 2Z"
+              stroke="#047857" strokeWidth="2" strokeLinejoin="round" />
+          </svg>
         </div>
         <h3 className="text-xl font-semibold text-text-primary mb-6">
-          Quiz Complete
+          Quiz complete
         </h3>
 
-        <div className="bg-surface rounded-2xl border border-border shadow-figma-md p-8 text-center min-w-[300px]">
+        <div className="bg-surface rounded-2xl border border-border shadow-md p-8 text-center min-w-[300px]">
           <div className={`text-5xl font-bold ${grade.color} mb-3`}>
             {grade.letter}
           </div>
@@ -118,7 +119,7 @@ export function Quiz({ topic }: QuizProps) {
 
           <div className="border-t border-border pt-4">
             <p className="text-[12px] font-medium text-text-muted">
-              Personal best: <span className="text-accent">{bestScore}/{totalQuestions}</span>
+              Personal best: <span className="text-primary">{bestScore}/{totalQuestions}</span>
             </p>
           </div>
         </div>
@@ -127,8 +128,8 @@ export function Quiz({ topic }: QuizProps) {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={handleRetry}
-          className="mt-8 px-6 py-2.5 bg-accent text-white text-sm font-medium rounded-lg
-            hover:bg-accent-hover transition-colors"
+          className="mt-8 px-6 py-2.5 bg-primary text-white text-sm font-medium rounded-lg
+            hover:bg-primary-hover transition-colors"
         >
           Try again
         </motion.button>
@@ -144,7 +145,7 @@ export function Quiz({ topic }: QuizProps) {
     >
       {/* Score header */}
       <div className="flex justify-between items-center mb-4">
-        <span className="text-[13px] font-medium text-accent">
+        <span className="text-[13px] font-medium text-primary">
           {score}/{currentIndex + (showResult ? 1 : 0)} correct
         </span>
         <span className="text-[13px] text-text-muted">
@@ -152,7 +153,7 @@ export function Quiz({ topic }: QuizProps) {
         </span>
         {bestScore > 0 && (
           <span className="text-[12px] font-medium text-text-muted">
-            Best: <span className="text-accent">{bestScore}/{totalQuestions}</span>
+            Best: <span className="text-primary">{bestScore}/{totalQuestions}</span>
           </span>
         )}
       </div>
@@ -160,7 +161,7 @@ export function Quiz({ topic }: QuizProps) {
       {/* Progress */}
       <div className="h-2 bg-surface-secondary rounded-full overflow-hidden mb-8">
         <motion.div
-          className="h-full bg-accent rounded-full"
+          className="h-full bg-primary rounded-full"
           animate={{ width: `${((currentIndex + 1) / totalQuestions) * 100}%` }}
           transition={{ type: "spring", stiffness: 100 }}
         />
@@ -175,7 +176,7 @@ export function Quiz({ topic }: QuizProps) {
           exit={{ opacity: 0, x: -30 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
-          <div className="p-6 bg-surface rounded-xl border border-border shadow-figma-sm mb-6">
+          <div className="p-6 bg-surface rounded-xl border border-border mb-6">
             <p className="text-[16px] text-text-primary leading-relaxed">
               {currentQuestion.question}
             </p>
@@ -184,17 +185,17 @@ export function Quiz({ topic }: QuizProps) {
           {/* Options */}
           <div className="grid gap-3">
             {currentQuestion.options.map((option, i) => {
-              let containerClass = "bg-surface border-border hover:border-accent/40 hover:shadow-figma";
+              let containerClass = "bg-surface border-border hover:border-primary/40 hover:shadow";
               let textClass = "text-text-primary";
               let numberClass = "text-text-muted bg-surface-secondary";
 
               if (showResult) {
                 if (i === currentQuestion.correctIndex) {
-                  containerClass = "bg-success-light border-success/30 shadow-figma-sm";
+                  containerClass = "bg-success-light border-success/30";
                   textClass = "text-success";
                   numberClass = "text-success bg-success-light";
                 } else if (i === selectedAnswer && i !== currentQuestion.correctIndex) {
-                  containerClass = "bg-danger-light border-danger/30 shadow-figma-sm";
+                  containerClass = "bg-danger-light border-danger/30";
                   textClass = "text-danger";
                   numberClass = "text-danger bg-danger-light";
                 } else {
@@ -228,7 +229,7 @@ export function Quiz({ topic }: QuizProps) {
           </div>
 
           <p className="text-center text-[11px] text-text-muted mt-5">
-            Press 1–4 to answer
+            Press 1-4 to answer
           </p>
         </motion.div>
       </AnimatePresence>

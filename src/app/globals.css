@@ -6,7 +6,7 @@
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #D4D4D4 transparent;
+  scrollbar-color: #D1D5DB transparent;
 }
 
 *::-webkit-scrollbar {
@@ -18,7 +18,7 @@
 }
 
 *::-webkit-scrollbar-thumb {
-  background: #D4D4D4;
+  background: #D1D5DB;
   border-radius: 3px;
 }
 
@@ -28,7 +28,7 @@ html {
 
 body {
   background: #FFFFFF;
-  color: #1E1E1E;
+  color: #111827;
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

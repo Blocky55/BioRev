@@ -11,12 +11,12 @@ interface NotesProps {
 
 /**
  * Render markdown-lite note strings into HTML.
- * Handles **bold** with accent-coloured strong tags.
+ * Handles **bold** with primary-coloured strong tags.
  * Only colourises the FIRST em-dash in a note (the title separator).
  */
 function renderNote(note: string): string {
-  let html = note.replace(/\*\*(.*?)\*\*/g, '<strong class="text-accent font-semibold">$1</strong>');
-  html = html.replace(/—/, '<span class="text-danger"> — </span>');
+  let html = note.replace(/\*\*(.*?)\*\*/g, '<strong class="text-primary font-semibold">$1</strong>');
+  html = html.replace(/—/, '<span class="text-text-muted font-normal"> — </span>');
   return html;
 }
 
@@ -26,7 +26,6 @@ export function Notes({ topic }: NotesProps) {
   const hasLoadedRef = useRef(false);
   const MAX_CHARS = 2000;
 
-  // Load saved notes on topic change
   useEffect(() => {
     hasLoadedRef.current = false;
     setUserNotes(getStickyNotes(topic.id));
@@ -39,7 +38,6 @@ export function Notes({ topic }: NotesProps) {
     setTimeout(() => setShowToast(false), 2000);
   }, [topic.id]);
 
-  // Debounced auto-save
   useEffect(() => {
     if (!hasLoadedRef.current) return;
     const timeout = setTimeout(() => {
@@ -58,7 +56,7 @@ export function Notes({ topic }: NotesProps) {
       {/* Topic Notes */}
       <div>
         <div className="flex items-center gap-2 mb-4">
-          <div className="w-1 h-5 bg-accent rounded-full" />
+          <div className="w-1 h-5 bg-primary rounded-full" />
           <h3 className="text-[13px] font-semibold text-text-secondary uppercase tracking-wide">
             Topic Notes
           </h3>
@@ -70,8 +68,8 @@ export function Notes({ topic }: NotesProps) {
               initial={{ opacity: 0, x: -12 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.025, type: "spring", stiffness: 300, damping: 30 }}
-              className="p-4 bg-surface rounded-xl border border-border shadow-figma-sm
-                hover:border-border-strong hover:shadow-figma transition-all duration-200"
+              className="p-4 bg-surface rounded-xl border border-border
+                hover:border-border-strong transition-all duration-200"
             >
               <p
                 className="text-[14px] text-text-primary leading-relaxed"
@@ -90,7 +88,7 @@ export function Notes({ topic }: NotesProps) {
             Your Notes
           </h3>
         </div>
-        <div className="bg-surface rounded-xl border border-border shadow-figma-sm overflow-hidden">
+        <div className="bg-surface rounded-xl border border-border overflow-hidden">
           <textarea
             value={userNotes}
             onChange={(e) => {
@@ -98,9 +96,9 @@ export function Notes({ topic }: NotesProps) {
                 setUserNotes(e.target.value);
               }
             }}
-            placeholder="Type your personal notes here... They auto-save!"
+            placeholder="Type your personal notes here... They auto-save."
             className="w-full h-40 p-4 text-[14px] text-text-primary bg-transparent rounded-xl resize-none
-              focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent
+              focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary
               placeholder:text-text-muted transition-all duration-200"
           />
         </div>
@@ -117,7 +115,7 @@ export function Notes({ topic }: NotesProps) {
                 className="text-[12px] font-medium text-success flex items-center gap-1"
               >
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M3.5 7L6 9.5L10.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M3.5 7L6 9.5L10.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
                 Saved
               </motion.span>

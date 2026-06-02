@@ -11,10 +11,20 @@ import { BackToTop } from "@/components/BackToTop";
 
 type TabType = "notes" | "flashcards" | "quiz";
 
+const TOPIC_COLORS = [
+  "bg-emerald-100 text-emerald-700 border-emerald-200",
+  "bg-teal-100 text-teal-700 border-teal-200",
+  "bg-cyan-100 text-cyan-700 border-cyan-200",
+  "bg-sky-100 text-sky-700 border-sky-200",
+  "bg-violet-100 text-violet-700 border-violet-200",
+  "bg-lime-100 text-lime-700 border-lime-200",
+];
+
 export default function TopicPage() {
   const params = useParams();
   const topicId = params.id as string;
-  const topic = topics.find((t) => t.id === topicId);
+  const topicIndex = topics.findIndex((t) => t.id === topicId);
+  const topic = topicIndex >= 0 ? topics[topicIndex] : undefined;
   const [activeTab, setActiveTab] = useState<TabType>("notes");
 
   if (!topic) {
@@ -25,11 +35,13 @@ export default function TopicPage() {
     );
   }
 
-  const tabs: { id: TabType; label: string; icon: string }[] = [
-    { id: "notes", label: "Notes", icon: "📝" },
-    { id: "flashcards", label: "Flashcards", icon: "🃏" },
-    { id: "quiz", label: "Quiz", icon: "⚡" },
+  const tabs: { id: TabType; label: string }[] = [
+    { id: "notes", label: "Notes" },
+    { id: "flashcards", label: "Flashcards" },
+    { id: "quiz", label: "Quiz" },
   ];
+
+  const colorClass = TOPIC_COLORS[topicIndex % TOPIC_COLORS.length];
 
   return (
     <div className="px-6 lg:px-10 py-8 max-w-[860px] mx-auto">
@@ -41,7 +53,9 @@ export default function TopicPage() {
         className="mb-6"
       >
         <div className="flex items-center gap-3 mb-1">
-          <span className="text-2xl">{topic.icon}</span>
+          <div className={`w-10 h-10 rounded-lg border flex items-center justify-center ${colorClass}`}>
+            <span className="text-[11px] font-bold">{topic.icon}</span>
+          </div>
           <div>
             <h2 className="text-xl font-semibold text-text-primary leading-tight">
               {topic.name}
@@ -57,13 +71,12 @@ export default function TopicPage() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`text-[13px] font-medium px-4 py-2 rounded-md transition-all duration-150 flex items-center gap-1.5
+            className={`text-[13px] font-medium px-5 py-2 rounded-md transition-all duration-150
               ${activeTab === tab.id
-                ? "bg-surface text-text-primary shadow-figma-sm"
+                ? "bg-surface text-text-primary shadow-sm"
                 : "text-text-muted hover:text-text-secondary"
               }`}
           >
-            <span className="text-sm">{tab.icon}</span>
             {tab.label}
           </button>
         ))}

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Sidebar } from "@/components/Sidebar";
+import { LayoutShell } from "@/components/LayoutShell";
 
 export const metadata: Metadata = {
   title: "BioRevise — Biology Revision",
@@ -15,10 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased font-sans bg-surface min-h-screen">
-        <Sidebar />
-        <main className="lg:ml-[260px] min-h-screen pt-14 lg:pt-0">
-          {children}
-        </main>
+        <LayoutShell>{children}</LayoutShell>
       </body>
     </html>
   );
