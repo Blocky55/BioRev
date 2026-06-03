@@ -16,6 +16,7 @@ import {
 } from "@/lib/progress";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { useToast } from "@/components/Toast";
+import { dispatchClawdEvent } from "@/components/Clawd";
 
 interface QuizProps {
   topic: Topic;
@@ -194,7 +195,12 @@ export function Quiz({ topic }: QuizProps) {
 
       const current = questions[currentIndex];
       const isCorrect = index === current.correctIndex;
-      if (isCorrect) setScore((s) => s + 1);
+      if (isCorrect) {
+        setScore((s) => s + 1);
+        dispatchClawdEvent({ type: "correct-answer" });
+      } else {
+        dispatchClawdEvent({ type: "wrong-answer" });
+      }
 
       const newAnswers: AnswerRecord[] = [
         ...answers,
@@ -588,6 +594,23 @@ export function Quiz({ topic }: QuizProps) {
             <p className="text-[14px] sm:text-[16px] text-text-primary leading-relaxed">
               {currentQuestion.question}
             </p>
+            {/* Ask Clawd hint */}
+            {!showResult && (
+              <button
+                onClick={() => dispatchClawdEvent({ type: "hint-request", text: currentQuestion.question })}
+                className="mt-3 flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium
+                  text-primary hover:text-primary-hover bg-primary-light hover:bg-primary/10
+                  rounded-lg transition-all active:scale-95"
+              >
+                <svg width="12" height="12" viewBox="0 0 56 56" fill="none" className="flex-shrink-0">
+                  <circle cx="28" cy="32" r="12" fill="#047857" />
+                  <circle cx="24" cy="30" r="2.5" fill="white" />
+                  <circle cx="32" cy="30" r="2.5" fill="white" />
+                  <path d="M24 35 Q28 38 32 35" stroke="white" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+                </svg>
+                Ask Clawd
+              </button>
+            )}
           </div>
 
           <div className="grid gap-2.5 sm:gap-3">

@@ -10,6 +10,7 @@ import {
   updateStreak,
 } from "@/lib/progress";
 import { ConfirmModal } from "@/components/ConfirmModal";
+import { dispatchClawdEvent } from "@/components/Clawd";
 
 interface FlashcardProps {
   topic: Topic;
@@ -153,6 +154,10 @@ export function Flashcard({ topic }: FlashcardProps) {
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
+      // Don't intercept keys when user is typing in the answer box
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === "TEXTAREA" || tag === "INPUT") return;
+
       if (e.key === "ArrowLeft") handlePrev();
       if (e.key === "ArrowRight") handleNext();
       if (e.key === " " || e.key === "Enter") {
@@ -279,8 +284,31 @@ export function Flashcard({ topic }: FlashcardProps) {
         </div>
       </div>
 
+      {/* Ask Clawd hint button */}
+      {!isFlipped && (
+        <div className="mt-3 sm:mt-4 mx-auto max-w-xl flex justify-end">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              dispatchClawdEvent({ type: "hint-request", text: currentCard.front });
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium
+              text-primary hover:text-primary-hover bg-primary-light hover:bg-primary/10
+              rounded-lg transition-all active:scale-95"
+          >
+            <svg width="14" height="14" viewBox="0 0 56 56" fill="none" className="flex-shrink-0">
+              <circle cx="28" cy="32" r="12" fill="#047857" />
+              <circle cx="24" cy="30" r="2.5" fill="white" />
+              <circle cx="32" cy="30" r="2.5" fill="white" />
+              <path d="M24 35 Q28 38 32 35" stroke="white" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+            </svg>
+            Ask Clawd for a hint
+          </button>
+        </div>
+      )}
+
       {/* Answer scratchpad */}
-      <div className="mt-4 sm:mt-5 mx-auto max-w-xl">
+      <div className="mt-3 sm:mt-4 mx-auto max-w-xl">
         <label className="text-[11px] font-medium text-text-muted uppercase tracking-wider block mb-1.5">
           Draft your answer
         </label>
