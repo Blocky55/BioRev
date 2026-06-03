@@ -65,6 +65,7 @@ export function Flashcard({ topic }: FlashcardProps) {
   const [showResetModal, setShowResetModal] = useState(false);
   const isTouch = useIsTouchDevice();
   const [answerText, setAnswerText] = useState("");
+  const [hintUsed, setHintUsed] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const progress = getFlashcardProgress(topic.id);
@@ -287,23 +288,36 @@ export function Flashcard({ topic }: FlashcardProps) {
       {/* Ask Clawd hint button */}
       {!isFlipped && (
         <div className="mt-3 sm:mt-4 mx-auto max-w-xl flex justify-end">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              dispatchClawdEvent({ type: "hint-request", text: currentCard.front });
-            }}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium
-              text-primary hover:text-primary-hover bg-primary-light hover:bg-primary/10
-              rounded-lg transition-all active:scale-95"
-          >
-            <svg width="14" height="14" viewBox="0 0 56 56" fill="none" className="flex-shrink-0">
-              <circle cx="28" cy="32" r="12" fill="#047857" />
-              <circle cx="24" cy="30" r="2.5" fill="white" />
-              <circle cx="32" cy="30" r="2.5" fill="white" />
-              <path d="M24 35 Q28 38 32 35" stroke="white" strokeWidth="1.2" fill="none" strokeLinecap="round" />
-            </svg>
-            Ask Clawd for a hint
-          </button>
+          {hintUsed.has(currentCard.id) ? (
+            <span className="flex items-center gap-1.5 px-3 py-1.5 text-[12px] text-text-muted">
+              <svg width="14" height="14" viewBox="0 0 56 56" fill="none" className="flex-shrink-0 opacity-50">
+                <circle cx="28" cy="32" r="12" fill="#6B7280" />
+                <circle cx="24" cy="30" r="2.5" fill="white" />
+                <circle cx="32" cy="30" r="2.5" fill="white" />
+                <path d="M24 35 Q28 38 32 35" stroke="white" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+              </svg>
+              Hint used
+            </span>
+          ) : (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setHintUsed((prev) => new Set(prev).add(currentCard.id));
+                dispatchClawdEvent({ type: "hint-request", text: currentCard.front, hint: currentCard.hint });
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium
+                text-primary hover:text-primary-hover bg-primary-light hover:bg-primary/10
+                rounded-lg transition-all active:scale-95"
+            >
+              <svg width="14" height="14" viewBox="0 0 56 56" fill="none" className="flex-shrink-0">
+                <circle cx="28" cy="32" r="12" fill="#047857" />
+                <circle cx="24" cy="30" r="2.5" fill="white" />
+                <circle cx="32" cy="30" r="2.5" fill="white" />
+                <path d="M24 35 Q28 38 32 35" stroke="white" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+              </svg>
+              Ask Clawd for a hint
+            </button>
+          )}
         </div>
       )}
 

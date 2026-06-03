@@ -68,7 +68,7 @@ type ClawdMood = "idle" | "thinking" | "happy" | "sad" | "excited" | "sleeping";
 
 // Custom event types for cross-component communication
 export type ClawdEvent =
-  | { type: "hint-request"; text: string }
+  | { type: "hint-request"; text: string; hint?: string }
   | { type: "correct-answer" }
   | { type: "wrong-answer" }
   | { type: "streak-milestone"; days: number };
@@ -111,7 +111,8 @@ export function Clawd({ isTopicPage }: ClawdProps) {
           setMood("thinking");
           // Delay hint to make thinking animation visible
           setTimeout(() => {
-            const hint = getHintForContent(event.text);
+            // Prefer the tailored hint from data; fall back to keyword matching
+            const hint = event.hint || getHintForContent(event.text);
             setMood("idle");
             showMessage(hint, 7000);
           }, 1200);

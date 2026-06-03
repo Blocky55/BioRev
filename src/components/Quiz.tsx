@@ -101,6 +101,7 @@ export function Quiz({ topic }: QuizProps) {
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
+  const [hintUsed, setHintUsed] = useState<Set<string>>(new Set());
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [answers, setAnswers] = useState<AnswerRecord[]>([]);
@@ -596,20 +597,35 @@ export function Quiz({ topic }: QuizProps) {
             </p>
             {/* Ask Clawd hint */}
             {!showResult && (
-              <button
-                onClick={() => dispatchClawdEvent({ type: "hint-request", text: currentQuestion.question })}
-                className="mt-3 flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium
-                  text-primary hover:text-primary-hover bg-primary-light hover:bg-primary/10
-                  rounded-lg transition-all active:scale-95"
-              >
-                <svg width="12" height="12" viewBox="0 0 56 56" fill="none" className="flex-shrink-0">
-                  <circle cx="28" cy="32" r="12" fill="#047857" />
-                  <circle cx="24" cy="30" r="2.5" fill="white" />
-                  <circle cx="32" cy="30" r="2.5" fill="white" />
-                  <path d="M24 35 Q28 38 32 35" stroke="white" strokeWidth="1.2" fill="none" strokeLinecap="round" />
-                </svg>
-                Ask Clawd
-              </button>
+              hintUsed.has(currentQuestion.id) ? (
+                <span className="mt-3 flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] text-text-muted">
+                  <svg width="12" height="12" viewBox="0 0 56 56" fill="none" className="flex-shrink-0 opacity-50">
+                    <circle cx="28" cy="32" r="12" fill="#6B7280" />
+                    <circle cx="24" cy="30" r="2.5" fill="white" />
+                    <circle cx="32" cy="30" r="2.5" fill="white" />
+                    <path d="M24 35 Q28 38 32 35" stroke="white" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+                  </svg>
+                  Hint used
+                </span>
+              ) : (
+                <button
+                  onClick={() => {
+                    setHintUsed((prev) => new Set(prev).add(currentQuestion.id));
+                    dispatchClawdEvent({ type: "hint-request", text: currentQuestion.question, hint: currentQuestion.hint });
+                  }}
+                  className="mt-3 flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium
+                    text-primary hover:text-primary-hover bg-primary-light hover:bg-primary/10
+                    rounded-lg transition-all active:scale-95"
+                >
+                  <svg width="12" height="12" viewBox="0 0 56 56" fill="none" className="flex-shrink-0">
+                    <circle cx="28" cy="32" r="12" fill="#047857" />
+                    <circle cx="24" cy="30" r="2.5" fill="white" />
+                    <circle cx="32" cy="30" r="2.5" fill="white" />
+                    <path d="M24 35 Q28 38 32 35" stroke="white" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+                  </svg>
+                  Ask Clawd
+                </button>
+              )
             )}
           </div>
 
