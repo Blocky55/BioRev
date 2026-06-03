@@ -59,9 +59,9 @@ export function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 safe-top ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 safe-top bio-nav-accent ${
         scrolled || mobileOpen
-          ? "bg-surface/95 backdrop-blur-md border-b border-border shadow-sm"
+          ? "bg-surface/95 backdrop-blur-md border-b border-border shadow-sm scrolled"
           : "bg-transparent"
       }`}
     >
@@ -163,7 +163,7 @@ export function Navbar() {
           {/* CTA */}
           <a
             href="#topics"
-            className="ml-1 px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-hover transition-colors"
+            className="ml-1 px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-hover transition-colors bio-btn"
           >
             Start learning
           </a>
@@ -284,7 +284,7 @@ export function Navbar() {
                 onClick={() => setMobileOpen(false)}
                 className="flex items-center justify-center mt-3 min-h-[48px] px-4
                   bg-primary text-white text-[15px] font-medium rounded-lg
-                  hover:bg-primary-hover active:bg-primary-hover transition-colors"
+                  hover:bg-primary-hover active:bg-primary-hover transition-colors bio-btn"
               >
                 Start learning
               </a>

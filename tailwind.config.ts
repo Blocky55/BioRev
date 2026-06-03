@@ -34,6 +34,12 @@ const config: Config = {
         "text-primary": "rgb(var(--c-text-1) / <alpha-value>)",
         "text-secondary": "rgb(var(--c-text-2) / <alpha-value>)",
         "text-muted": "rgb(var(--c-text-muted) / <alpha-value>)",
+
+        // Biology accent colours
+        bio: {
+          glow: "rgb(var(--c-bio-glow) / <alpha-value>)",
+          soft: "rgb(var(--c-bio-soft) / <alpha-value>)",
+        },
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
@@ -47,6 +53,28 @@ const config: Config = {
         DEFAULT: "0 2px 8px rgba(0,0,0,0.06)",
         md: "0 4px 16px rgba(0,0,0,0.08)",
         lg: "0 8px 32px rgba(0,0,0,0.10)",
+        glow: "0 0 20px rgba(16,185,129,0.15)",
+        "glow-lg": "0 0 40px rgba(16,185,129,0.2)",
+      },
+      animation: {
+        "float": "float 6s ease-in-out infinite",
+        "float-slow": "float 8s ease-in-out infinite",
+        "pulse-soft": "pulse-soft 4s ease-in-out infinite",
+        "helix-spin": "helix-spin 20s linear infinite",
+      },
+      keyframes: {
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-8px)" },
+        },
+        "pulse-soft": {
+          "0%, 100%": { opacity: "0.4" },
+          "50%": { opacity: "0.7" },
+        },
+        "helix-spin": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
       },
     },
   },

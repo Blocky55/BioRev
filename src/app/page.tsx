@@ -36,21 +36,39 @@ const TOPIC_COLORS = [
 const studyPlan: { days: string; title: string; description: string }[] = [
   {
     days: "Mon - Tue",
-    title: "DNA & Stem Cells",
+    title: "DNA & Human Genome Project",
     description:
-      "Potency hierarchy, SNP types, Human Genome Project findings, iPSCs and cloning.",
+      "Chromosomes, replication, mutations, SNPs, GWAS, Human Genome Project findings.",
   },
   {
-    days: "Wed - Thu",
-    title: "Precision Medicine & Brain",
+    days: "Wed",
+    title: "Development & Stem Cells",
     description:
-      "Biomarker uses, HER2/Herceptin, pharmacogenomics. Brain lobes, action potentials, developmental origins.",
+      "Potency hierarchy, iPSCs, cloning, differentiation, and ethical considerations.",
   },
   {
-    days: "Fri - Sun",
-    title: "Microbes & Conservation",
+    days: "Thu - Fri",
+    title: "Precision Medicine",
     description:
-      "Resistance mechanisms, FMT, STI trends. Extinction vortex, invasive species, conservation targets.",
+      "Biomarker uses, HER2/Herceptin, pharmacogenomics, companion diagnostics.",
+  },
+  {
+    days: "Sat",
+    title: "The Human Brain",
+    description:
+      "Brain lobes, action potentials, developmental origins, neurotransmission.",
+  },
+  {
+    days: "Sun - Mon",
+    title: "Microbes & Infectious Disease",
+    description:
+      "Resistance mechanisms, FMT, STI trends, Koch's postulates, epidemiology.",
+  },
+  {
+    days: "Tue",
+    title: "Conservation Biology",
+    description:
+      "Extinction vortex, invasive species, conservation targets, biodiversity metrics.",
   },
 ];
 
@@ -128,7 +146,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <a
                 href="#topics"
-                className="flex items-center justify-center min-h-[48px] sm:min-h-0 px-6 py-3 bg-primary text-white text-[15px] sm:text-sm font-medium rounded-lg hover:bg-primary-hover active:bg-primary-hover transition-colors"
+                className="flex items-center justify-center min-h-[48px] sm:min-h-0 px-6 py-3 bg-primary text-white text-[15px] sm:text-sm font-medium rounded-lg hover:bg-primary-hover active:bg-primary-hover transition-colors bio-btn"
               >
                 Browse topics
               </a>
@@ -198,7 +216,7 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + i * 0.05, duration: 0.35 }}
                 >
-                  <div className="bg-surface rounded-xl border border-border hover:border-primary/30 hover:shadow-md transition-all duration-200 h-full flex flex-col">
+                  <div className="bg-surface rounded-xl border border-border hover:border-primary/30 transition-all duration-200 h-full flex flex-col bio-card bio-hex-accent">
                     {/* Clickable content area */}
                     <Link
                       href={`/topic/${topic.id}`}
@@ -318,28 +336,47 @@ export default function Home() {
               Study plan
             </h2>
             <p className="text-[14px] sm:text-base text-text-secondary mb-6 sm:mb-8">
-              A weekly rotation to cover all six topics.
+              A two-week rotation. Odd topics get 2 days, even topics get 1 day.
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
               {studyPlan.map((block, i) => {
                 const colors = [
                   "bg-primary-light border-primary/10",
                   "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200/60 dark:border-emerald-800/60",
                   "bg-teal-50 dark:bg-teal-950/40 border-teal-200/60 dark:border-teal-800/60",
+                  "bg-cyan-50 dark:bg-cyan-950/40 border-cyan-200/60 dark:border-cyan-800/60",
+                  "bg-sky-50 dark:bg-sky-950/40 border-sky-200/60 dark:border-sky-800/60",
+                  "bg-violet-50 dark:bg-violet-950/40 border-violet-200/60 dark:border-violet-800/60",
                 ];
-                const dayColors = ["text-primary", "text-emerald-700 dark:text-emerald-400", "text-teal-700 dark:text-teal-400"];
+                const dayColors = [
+                  "text-primary",
+                  "text-emerald-700 dark:text-emerald-400",
+                  "text-teal-700 dark:text-teal-400",
+                  "text-cyan-700 dark:text-cyan-400",
+                  "text-sky-700 dark:text-sky-400",
+                  "text-violet-700 dark:text-violet-400",
+                ];
+                // Odd topics (1,3,5) get 2 days, even topics (2,4,6) get 1 day
+                const isDualDay = i % 2 === 0; // index 0,2,4 = topics 1,3,5
                 return (
                   <motion.div
                     key={block.days}
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 + i * 0.08, duration: 0.35 }}
-                    className={`p-5 sm:p-6 rounded-xl border ${colors[i]}`}
+                    transition={{ delay: 0.6 + i * 0.06, duration: 0.35 }}
+                    className={`p-5 sm:p-6 rounded-xl border bio-card ${colors[i]}`}
                   >
-                    <p className={`text-[12px] font-semibold ${dayColors[i]} mb-1`}>
-                      {block.days}
-                    </p>
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className={`text-[12px] font-semibold ${dayColors[i]}`}>
+                        {block.days}
+                      </p>
+                      {isDualDay && (
+                        <span className="text-[10px] font-medium text-text-muted bg-surface-secondary px-1.5 py-0.5 rounded">
+                          2 days
+                        </span>
+                      )}
+                    </div>
                     <h4 className="font-semibold text-[15px] text-text-primary mb-2">
                       {block.title}
                     </h4>
@@ -354,7 +391,8 @@ export default function Home() {
         </section>
 
         {/* Footer */}
-        <footer className="border-t border-border py-8 sm:py-10 safe-bottom">
+        <footer className="py-8 sm:py-10 safe-bottom">
+          <div className="bio-divider mb-8 sm:mb-10" />
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
             <div className="flex items-center gap-2.5">
               <div className="w-6 h-6 bg-primary rounded flex items-center justify-center">

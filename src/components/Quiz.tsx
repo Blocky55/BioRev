@@ -466,7 +466,7 @@ export function Quiz({ topic }: QuizProps) {
       >
         <h3 className="text-lg font-semibold text-text-primary mb-5 sm:mb-6">Round complete</h3>
 
-        <div className="bg-surface rounded-2xl border border-border shadow-md p-6 sm:p-8 text-center w-full max-w-sm">
+        <div className="bg-surface rounded-2xl border border-border shadow-md p-6 sm:p-8 text-center w-full max-w-sm bio-card bio-hex-accent">
           <div className={`text-4xl sm:text-5xl font-bold ${grade.color} mb-2`}>{grade.letter}</div>
           <p className="text-xl sm:text-2xl font-semibold text-text-primary mb-1">
             {finalScore}/{totalQ}
@@ -517,7 +517,7 @@ export function Quiz({ topic }: QuizProps) {
           <motion.button
             whileTap={{ scale: 0.98 }}
             onClick={() => startRound(mode)}
-            className="min-h-[48px] sm:min-h-0 px-5 py-2.5 bg-primary text-white text-[15px] sm:text-sm font-medium rounded-lg hover:bg-primary-hover active:bg-primary-hover transition-colors"
+            className="min-h-[48px] sm:min-h-0 px-5 py-2.5 bg-primary text-white text-[15px] sm:text-sm font-medium rounded-lg hover:bg-primary-hover active:bg-primary-hover transition-colors bio-btn"
           >
             Another round
           </motion.button>
@@ -591,7 +591,7 @@ export function Quiz({ topic }: QuizProps) {
           exit={{ opacity: 0, x: -30 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
-          <div className="p-4 sm:p-6 bg-surface rounded-xl border border-border mb-4 sm:mb-6">
+          <div className="p-4 sm:p-6 bg-surface rounded-xl border border-border mb-4 sm:mb-6 bio-card">
             <p className="text-[14px] sm:text-[16px] text-text-primary leading-relaxed">
               {currentQuestion.question}
             </p>

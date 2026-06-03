@@ -14,11 +14,11 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
     <ToastProvider>
       {isTopicPage && <Sidebar />}
       <main
-        className={
+        className={`relative z-[1] ${
           isTopicPage
             ? "lg:ml-[260px] min-h-screen pt-14 lg:pt-0"
             : "min-h-screen"
-        }
+        }`}
       >
         {children}
       </main>

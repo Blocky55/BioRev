@@ -334,7 +334,7 @@ export function Clawd({ isTopicPage }: ClawdProps) {
         whileHover={{ scale: 1.12, rotate: [0, -6, 6, -4, 0] }}
         whileTap={{ scale: 0.85 }}
         animate={bodyVariants[mood]}
-        className="w-14 h-14 relative cursor-pointer focus:outline-none"
+        className="w-14 h-14 relative cursor-pointer focus:outline-none clawd-platform"
         aria-label="Clawd the mascot — click for biology tips"
         title="Click me!"
       >

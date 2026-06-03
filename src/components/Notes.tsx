@@ -69,7 +69,7 @@ export function Notes({ topic }: NotesProps) {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.025, type: "spring", stiffness: 300, damping: 30 }}
               className="p-3.5 sm:p-4 bg-surface rounded-xl border border-border
-                hover:border-border-strong active:border-border-strong transition-all duration-200"
+                hover:border-border-strong active:border-border-strong transition-all duration-200 bio-card"
             >
               <p
                 className="text-[13px] sm:text-[14px] text-text-primary leading-relaxed"

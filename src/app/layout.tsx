@@ -23,7 +23,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased font-sans bg-canvas min-h-screen">
+      <body className="antialiased font-sans bg-canvas min-h-screen bio-bg">
         <LayoutShell>{children}</LayoutShell>
       </body>
     </html>
