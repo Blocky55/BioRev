@@ -271,14 +271,14 @@ export function Flashcard({ topic }: FlashcardProps) {
       {/* Flashcard */}
       <div className="card-3d cursor-pointer mx-auto max-w-xl" onClick={() => setIsFlipped(!isFlipped)}>
         <div className={`card-3d-inner relative w-full min-h-[220px] sm:min-h-[280px] ${isFlipped ? "flipped" : ""}`}>
-          <div className="card-3d-front absolute inset-0 p-5 sm:p-8 bg-surface rounded-2xl border border-border shadow-md flex flex-col items-center justify-center bio-shimmer bio-card">
+          <div className="card-3d-front absolute inset-0 p-5 sm:p-8 bg-surface rounded-2xl border border-border shadow-md flex flex-col items-center justify-center">
             <span className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-3 sm:mb-4">Question</span>
             <p className="text-[15px] sm:text-lg text-center text-text-primary leading-relaxed">{currentCard.front}</p>
             <span className="text-[11px] text-text-muted mt-4 sm:mt-6">
               {isTouch ? "Tap to flip" : "Click to flip"}
             </span>
           </div>
-          <div className="card-3d-back absolute inset-0 p-5 sm:p-8 bg-primary-light rounded-2xl border border-primary/15 shadow-md flex flex-col items-center justify-center bio-hex-accent">
+          <div className="card-3d-back absolute inset-0 p-5 sm:p-8 bg-primary-light rounded-2xl border border-primary/15 shadow-md flex flex-col items-center justify-center">
             <span className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-3 sm:mb-4">Answer</span>
             <p className="text-[15px] sm:text-lg text-center text-text-primary leading-relaxed">{currentCard.back}</p>
           </div>

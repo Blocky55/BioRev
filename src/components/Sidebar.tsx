@@ -113,7 +113,7 @@ export function Sidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full w-[280px] sm:w-[260px] bg-surface border-r border-border z-50 flex flex-col overflow-y-auto bio-hex-accent
+        className={`fixed top-0 left-0 h-full w-[280px] sm:w-[260px] bg-surface border-r border-border z-50 flex flex-col overflow-y-auto
           ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 transition-transform duration-200 ease-out`}
       >
         {/* Header */}

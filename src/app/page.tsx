@@ -216,7 +216,7 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + i * 0.05, duration: 0.35 }}
                 >
-                  <div className="bg-surface rounded-xl border border-border hover:border-primary/30 transition-all duration-200 h-full flex flex-col bio-card bio-hex-accent">
+                  <div className="bg-surface rounded-xl border border-border hover:border-primary/30 transition-all duration-200 h-full flex flex-col bio-card">
                     {/* Clickable content area */}
                     <Link
                       href={`/topic/${topic.id}`}

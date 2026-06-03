@@ -466,7 +466,7 @@ export function Quiz({ topic }: QuizProps) {
       >
         <h3 className="text-lg font-semibold text-text-primary mb-5 sm:mb-6">Round complete</h3>
 
-        <div className="bg-surface rounded-2xl border border-border shadow-md p-6 sm:p-8 text-center w-full max-w-sm bio-card bio-hex-accent">
+        <div className="bg-surface rounded-2xl border border-border shadow-md p-6 sm:p-8 text-center w-full max-w-sm bio-card">
           <div className={`text-4xl sm:text-5xl font-bold ${grade.color} mb-2`}>{grade.letter}</div>
           <p className="text-xl sm:text-2xl font-semibold text-text-primary mb-1">
             {finalScore}/{totalQ}
