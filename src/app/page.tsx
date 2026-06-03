@@ -25,12 +25,12 @@ interface TopicStats {
 }
 
 const TOPIC_COLORS = [
-  { bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200" },
-  { bg: "bg-teal-50", text: "text-teal-700", border: "border-teal-200" },
-  { bg: "bg-cyan-50", text: "text-cyan-700", border: "border-cyan-200" },
-  { bg: "bg-sky-50", text: "text-sky-700", border: "border-sky-200" },
-  { bg: "bg-violet-50", text: "text-violet-700", border: "border-violet-200" },
-  { bg: "bg-lime-50", text: "text-lime-700", border: "border-lime-200" },
+  { bg: "bg-emerald-50 dark:bg-emerald-950/40", text: "text-emerald-700 dark:text-emerald-400", border: "border-emerald-200 dark:border-emerald-800" },
+  { bg: "bg-teal-50 dark:bg-teal-950/40", text: "text-teal-700 dark:text-teal-400", border: "border-teal-200 dark:border-teal-800" },
+  { bg: "bg-cyan-50 dark:bg-cyan-950/40", text: "text-cyan-700 dark:text-cyan-400", border: "border-cyan-200 dark:border-cyan-800" },
+  { bg: "bg-sky-50 dark:bg-sky-950/40", text: "text-sky-700 dark:text-sky-400", border: "border-sky-200 dark:border-sky-800" },
+  { bg: "bg-violet-50 dark:bg-violet-950/40", text: "text-violet-700 dark:text-violet-400", border: "border-violet-200 dark:border-violet-800" },
+  { bg: "bg-lime-50 dark:bg-lime-950/40", text: "text-lime-700 dark:text-lime-400", border: "border-lime-200 dark:border-lime-800" },
 ];
 
 const studyPlan: { days: string; title: string; description: string }[] = [
@@ -325,10 +325,10 @@ export default function Home() {
               {studyPlan.map((block, i) => {
                 const colors = [
                   "bg-primary-light border-primary/10",
-                  "bg-emerald-50 border-emerald-200/60",
-                  "bg-teal-50 border-teal-200/60",
+                  "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200/60 dark:border-emerald-800/60",
+                  "bg-teal-50 dark:bg-teal-950/40 border-teal-200/60 dark:border-teal-800/60",
                 ];
-                const dayColors = ["text-primary", "text-emerald-700", "text-teal-700"];
+                const dayColors = ["text-primary", "text-emerald-700 dark:text-emerald-400", "text-teal-700 dark:text-teal-400"];
                 return (
                   <motion.div
                     key={block.days}

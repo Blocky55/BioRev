@@ -293,6 +293,52 @@ export function saveUserProfile(profile: UserProfile): void {
   localStorage.setItem("biorevise-profile", JSON.stringify(profile));
 }
 
+// ── Streak ──
+
+export interface StreakData {
+  currentStreak: number;
+  longestStreak: number;
+  lastStudyDate: string; // YYYY-MM-DD
+}
+
+export function getStreakData(): StreakData {
+  if (!isBrowser()) return { currentStreak: 0, longestStreak: 0, lastStudyDate: "" };
+  const raw = localStorage.getItem("biorevise-streak");
+  if (!raw) return { currentStreak: 0, longestStreak: 0, lastStudyDate: "" };
+  try { return JSON.parse(raw) as StreakData; }
+  catch { return { currentStreak: 0, longestStreak: 0, lastStudyDate: "" }; }
+}
+
+/** Call on any study activity. Idempotent per calendar day. */
+export function updateStreak(): { streakIncreased: boolean; milestone: number | null } {
+  if (!isBrowser()) return { streakIncreased: false, milestone: null };
+  const streak = getStreakData();
+  const today = new Date().toISOString().split("T")[0];
+
+  // Already studied today — no-op
+  if (streak.lastStudyDate === today) {
+    return { streakIncreased: false, milestone: null };
+  }
+
+  const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
+
+  if (streak.lastStudyDate === yesterday) {
+    streak.currentStreak += 1;
+  } else {
+    streak.currentStreak = 1; // gap > 1 day → reset
+  }
+
+  streak.lastStudyDate = today;
+  streak.longestStreak = Math.max(streak.longestStreak, streak.currentStreak);
+
+  localStorage.setItem("biorevise-streak", JSON.stringify(streak));
+
+  const milestones = [7, 14, 30, 60, 100];
+  const milestone = milestones.includes(streak.currentStreak) ? streak.currentStreak : null;
+
+  return { streakIncreased: true, milestone };
+}
+
 // ── Export / Import ──
 
 export function exportAllProgress(): ProgressExport {

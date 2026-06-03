@@ -9,6 +9,7 @@ import {
   getStartedTopics,
   getFlashcardProgress,
   getTopicBadge,
+  getStreakData,
   exportAllProgress,
   validateProgressExport,
   importProgress,
@@ -85,7 +86,9 @@ export function ProfilePanel() {
       if (badge) badges.push({ topicName: topic.name, level: badge });
     });
 
-    return { startedTopics, totalFlashcards, totalMastered, badges };
+    const streak = getStreakData();
+
+    return { startedTopics, totalFlashcards, totalMastered, badges, streak };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
@@ -228,6 +231,33 @@ export function ProfilePanel() {
               </div>
             </div>
 
+            {/* Streak */}
+            <div>
+              <h3 className="text-[12px] font-medium text-text-muted uppercase tracking-wide mb-3">
+                Study Streak
+              </h3>
+              <div className="flex items-center gap-4 p-3 bg-surface-secondary rounded-xl">
+                <div className="flex items-center gap-2">
+                  <svg width="18" height="18" viewBox="0 0 14 14" fill="none">
+                    <path
+                      d="M7 1C7 1 3 5.5 3 8.5C3 10.71 4.79 12.5 7 12.5C9.21 12.5 11 10.71 11 8.5C11 5.5 7 1 7 1Z"
+                      fill="currentColor"
+                      className="text-warning"
+                    />
+                  </svg>
+                  <div>
+                    <p className="text-lg font-bold text-text-primary">{stats.streak.currentStreak}</p>
+                    <p className="text-[11px] text-text-muted">Current</p>
+                  </div>
+                </div>
+                <div className="h-8 w-px bg-border" />
+                <div>
+                  <p className="text-lg font-bold text-text-primary">{stats.streak.longestStreak}</p>
+                  <p className="text-[11px] text-text-muted">Longest</p>
+                </div>
+              </div>
+            </div>
+
             {/* Badges */}
             <div>
               <h3 className="text-[12px] font-medium text-text-muted uppercase tracking-wide mb-3">
@@ -280,7 +310,8 @@ export function ProfilePanel() {
                   </svg>
                   <div
                     className="hidden group-hover:block absolute bottom-full left-0 mb-1.5 p-2.5
-                      bg-text-primary text-white text-[11px] leading-relaxed rounded-lg shadow-lg w-52 z-10"
+                      bg-gray-900 text-gray-50 dark:bg-gray-200 dark:text-gray-900
+                      text-[11px] leading-relaxed rounded-lg shadow-lg w-52 z-10"
                   >
                     Use Export/Import to sync BioRevise across devices (phone + laptop). Progress is
                     saved locally in your browser.
@@ -370,7 +401,14 @@ export function ProfilePanel() {
         )}
 
         {/* Footer */}
-        <div className="px-5 py-4 border-t border-border">
+        <div className="px-5 py-4 border-t border-border space-y-2">
+          <div className="flex items-center gap-1.5 text-[11px] text-text-muted">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="flex-shrink-0">
+              <path d="M6 1v4l2.5 1.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+              <circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1" />
+            </svg>
+            Progress saved locally in your browser.
+          </div>
           <p className="text-[11px] text-text-muted">Made by AL</p>
         </div>
       </aside>

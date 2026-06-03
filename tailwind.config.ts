@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: "class",
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,31 +10,30 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Biology-inspired palette
-        surface: "#FFFFFF",
-        "surface-secondary": "#F9FAFB",
-        "surface-tertiary": "#F3F4F6",
-        border: "#E5E7EB",
-        "border-strong": "#D1D5DB",
+        // All semantic colours use CSS custom properties so light/dark
+        // themes switch automatically without per-component dark: classes.
+        canvas: "rgb(var(--c-canvas) / <alpha-value>)",
+        surface: "rgb(var(--c-surface) / <alpha-value>)",
+        "surface-secondary": "rgb(var(--c-surface-2) / <alpha-value>)",
+        "surface-tertiary": "rgb(var(--c-surface-3) / <alpha-value>)",
+        border: "rgb(var(--c-border) / <alpha-value>)",
+        "border-strong": "rgb(var(--c-border-strong) / <alpha-value>)",
 
-        // Primary — rich emerald green (biology, nature, cells)
-        primary: "#047857",
-        "primary-light": "#ECFDF5",
-        "primary-hover": "#065F46",
-        "primary-dark": "#064E3B",
+        primary: "rgb(var(--c-primary) / <alpha-value>)",
+        "primary-light": "rgb(var(--c-primary-light) / <alpha-value>)",
+        "primary-hover": "rgb(var(--c-primary-hover) / <alpha-value>)",
+        "primary-dark": "rgb(var(--c-primary-dark) / <alpha-value>)",
 
-        // Semantic
-        success: "#16A34A",
-        "success-light": "#F0FDF4",
-        danger: "#DC2626",
-        "danger-light": "#FEF2F2",
-        warning: "#CA8A04",
-        "warning-light": "#FEFCE8",
+        success: "rgb(var(--c-success) / <alpha-value>)",
+        "success-light": "rgb(var(--c-success-light) / <alpha-value>)",
+        danger: "rgb(var(--c-danger) / <alpha-value>)",
+        "danger-light": "rgb(var(--c-danger-light) / <alpha-value>)",
+        warning: "rgb(var(--c-warning) / <alpha-value>)",
+        "warning-light": "rgb(var(--c-warning-light) / <alpha-value>)",
 
-        // Text
-        "text-primary": "#111827",
-        "text-secondary": "#4B5563",
-        "text-muted": "#9CA3AF",
+        "text-primary": "rgb(var(--c-text-1) / <alpha-value>)",
+        "text-secondary": "rgb(var(--c-text-2) / <alpha-value>)",
+        "text-muted": "rgb(var(--c-text-muted) / <alpha-value>)",
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
@@ -43,10 +43,10 @@ const config: Config = {
         "2xl": "16px",
       },
       boxShadow: {
-        "sm": "0 1px 2px rgba(0,0,0,0.04)",
-        "DEFAULT": "0 2px 8px rgba(0,0,0,0.06)",
-        "md": "0 4px 16px rgba(0,0,0,0.08)",
-        "lg": "0 8px 32px rgba(0,0,0,0.10)",
+        sm: "0 1px 2px rgba(0,0,0,0.04)",
+        DEFAULT: "0 2px 8px rgba(0,0,0,0.06)",
+        md: "0 4px 16px rgba(0,0,0,0.08)",
+        lg: "0 8px 32px rgba(0,0,0,0.10)",
       },
     },
   },

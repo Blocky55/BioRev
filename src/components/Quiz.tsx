@@ -10,10 +10,12 @@ import {
   saveQuizSession,
   getQuizSession,
   clearQuizSession,
+  updateStreak,
   QuizProgress,
   QuizQuestionStat,
 } from "@/lib/progress";
 import { ConfirmModal } from "@/components/ConfirmModal";
+import { useToast } from "@/components/Toast";
 
 interface QuizProps {
   topic: Topic;
@@ -93,6 +95,7 @@ export function Quiz({ topic }: QuizProps) {
   const [progress, setProgress] = useState<QuizProgress | null>(null);
   const [showResetModal, setShowResetModal] = useState(false);
   const isTouch = useIsTouchDevice();
+  const { showToast } = useToast();
 
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -249,6 +252,18 @@ export function Quiz({ topic }: QuizProps) {
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [handleAnswer, phase, currentIndex, questions]);
+
+  // Update streak when a round is completed
+  useEffect(() => {
+    if (phase !== "results") return;
+    const result = updateStreak();
+    if (result.milestone) {
+      showToast(`🔥 ${result.milestone}-day streak! Keep going!`, "success");
+    } else if (result.streakIncreased) {
+      showToast("Study streak updated!", "info");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase]);
 
   // ── Reset handler ──
   const handleResetProgress = () => {

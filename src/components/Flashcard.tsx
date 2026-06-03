@@ -7,6 +7,7 @@ import {
   getFlashcardProgress,
   saveFlashcardProgress,
   resetFlashcardProgress,
+  updateStreak,
 } from "@/lib/progress";
 import { ConfirmModal } from "@/components/ConfirmModal";
 
@@ -62,6 +63,7 @@ export function Flashcard({ topic }: FlashcardProps) {
   const [allDone, setAllDone] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
   const isTouch = useIsTouchDevice();
+  const [answerText, setAnswerText] = useState("");
 
   useEffect(() => {
     const progress = getFlashcardProgress(topic.id);
@@ -83,6 +85,8 @@ export function Flashcard({ topic }: FlashcardProps) {
 
   const handleKnown = () => {
     if (!currentCard) return;
+    updateStreak();
+    setAnswerText("");
     const newKnown = [...known, currentCard.id];
     const newLearning = learning.filter((id) => id !== currentCard.id);
     setKnown(newKnown);
@@ -101,6 +105,8 @@ export function Flashcard({ topic }: FlashcardProps) {
 
   const handleLearning = () => {
     if (!currentCard) return;
+    updateStreak();
+    setAnswerText("");
     const newLearning = learning.includes(currentCard.id)
       ? learning
       : [...learning, currentCard.id];
@@ -116,11 +122,13 @@ export function Flashcard({ topic }: FlashcardProps) {
 
   const handleNext = () => {
     setIsFlipped(false);
+    setAnswerText("");
     setCurrentIndex((prev) => (prev + 1) % remainingCards.length);
   };
 
   const handlePrev = () => {
     setIsFlipped(false);
+    setAnswerText("");
     setCurrentIndex((prev) => (prev - 1 + remainingCards.length) % remainingCards.length);
   };
 
@@ -129,6 +137,7 @@ export function Flashcard({ topic }: FlashcardProps) {
     setCards(shuffled);
     setCurrentIndex(0);
     setIsFlipped(false);
+    setAnswerText("");
   };
 
   // Confirmed reset — clears all mastered/learning state
@@ -270,8 +279,25 @@ export function Flashcard({ topic }: FlashcardProps) {
         </div>
       </div>
 
+      {/* Answer scratchpad */}
+      <div className="mt-4 sm:mt-5 mx-auto max-w-xl">
+        <label className="text-[11px] font-medium text-text-muted uppercase tracking-wider block mb-1.5">
+          Draft your answer
+        </label>
+        <textarea
+          value={answerText}
+          onChange={(e) => setAnswerText(e.target.value)}
+          onClick={(e) => e.stopPropagation()}
+          placeholder="Type your answer here before flipping..."
+          className="w-full px-3 py-2.5 text-[14px] text-text-primary bg-surface-secondary
+            rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20
+            focus:border-primary placeholder:text-text-muted transition-all resize-none"
+          rows={2}
+        />
+      </div>
+
       {/* Controls */}
-      <div className="mt-6 sm:mt-8">
+      <div className="mt-4 sm:mt-6">
         <div className="grid grid-cols-2 sm:flex sm:justify-center gap-2 sm:gap-3">
           <motion.button
             whileTap={{ scale: 0.97 }}

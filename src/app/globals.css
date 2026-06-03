@@ -4,9 +4,65 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+/* ── Theme colour tokens (RGB channels) ──
+   Tailwind references these via  rgb(var(--c-xxx) / <alpha>)
+   so opacity modifiers like bg-primary/20 keep working.            */
+
+:root {
+  --c-canvas: 255 255 255;
+  --c-surface: 255 255 255;
+  --c-surface-2: 249 250 251;
+  --c-surface-3: 243 244 246;
+  --c-border: 229 231 235;
+  --c-border-strong: 209 213 219;
+
+  --c-primary: 4 120 87;
+  --c-primary-light: 236 253 245;
+  --c-primary-hover: 6 95 70;
+  --c-primary-dark: 6 78 59;
+
+  --c-success: 22 163 74;
+  --c-success-light: 240 253 244;
+  --c-danger: 220 38 38;
+  --c-danger-light: 254 242 242;
+  --c-warning: 202 138 4;
+  --c-warning-light: 254 252 232;
+
+  --c-text-1: 17 24 39;
+  --c-text-2: 75 85 99;
+  --c-text-muted: 156 163 175;
+}
+
+.dark {
+  --c-canvas: 17 24 39;
+  --c-surface: 31 41 55;
+  --c-surface-2: 40 53 72;
+  --c-surface-3: 55 65 81;
+  --c-border: 55 65 81;
+  --c-border-strong: 75 85 99;
+
+  --c-primary: 16 185 129;
+  --c-primary-light: 6 78 59;
+  --c-primary-hover: 5 150 105;
+  --c-primary-dark: 4 120 87;
+
+  --c-success: 34 197 94;
+  --c-success-light: 5 46 22;
+  --c-danger: 239 68 68;
+  --c-danger-light: 69 10 10;
+  --c-warning: 234 179 8;
+  --c-warning-light: 66 32 6;
+
+  --c-text-1: 249 250 251;
+  --c-text-2: 209 213 219;
+  --c-text-muted: 107 114 128;
+}
+
+/* ── Base ── */
+
 * {
   scrollbar-width: thin;
-  scrollbar-color: #D1D5DB transparent;
+  scrollbar-color: rgb(var(--c-border-strong)) transparent;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -19,7 +75,7 @@
 }
 
 *::-webkit-scrollbar-thumb {
-  background: #D1D5DB;
+  background: rgb(var(--c-border-strong));
   border-radius: 3px;
 }
 
@@ -30,8 +86,8 @@ html {
 }
 
 body {
-  background: #FFFFFF;
-  color: #111827;
+  background: rgb(var(--c-canvas));
+  color: rgb(var(--c-text-1));
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -49,7 +105,8 @@ button, a, [role="button"] {
   .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
 }
 
-/* Flashcard 3D flip */
+/* ── Flashcard 3D flip ── */
+
 .card-3d {
   perspective: 1200px;
 }
@@ -73,7 +130,8 @@ button, a, [role="button"] {
   transform: rotateY(180deg);
 }
 
-/* Confetti */
+/* ── Confetti ── */
+
 @keyframes confetti-fall {
   0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
   100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }

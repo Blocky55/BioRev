@@ -4,13 +4,14 @@ import { usePathname } from "next/navigation";
 import { Sidebar } from "./Sidebar";
 import { ProfilePanel } from "./ProfilePanel";
 import { Clawd } from "./Clawd";
+import { ToastProvider } from "./Toast";
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isTopicPage = pathname.startsWith("/topic/");
 
   return (
-    <>
+    <ToastProvider>
       {isTopicPage && <Sidebar />}
       <main
         className={
@@ -23,6 +24,6 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
       </main>
       <ProfilePanel />
       <Clawd isTopicPage={isTopicPage} />
-    </>
+    </ToastProvider>
   );
 }

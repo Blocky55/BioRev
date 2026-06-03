@@ -2,10 +2,25 @@
 
 import { BadgeLevel } from "@/lib/progress";
 
-const BADGE_STYLES: Record<BadgeLevel, { bg: string; text: string; label: string }> = {
-  gold: { bg: "bg-yellow-100", text: "text-yellow-700", label: "Gold" },
-  silver: { bg: "bg-gray-100", text: "text-gray-600", label: "Silver" },
-  bronze: { bg: "bg-orange-100", text: "text-orange-700", label: "Bronze" },
+const BADGE_STYLES: Record<
+  BadgeLevel,
+  { bg: string; text: string; label: string }
+> = {
+  gold: {
+    bg: "bg-yellow-100 dark:bg-yellow-900/40",
+    text: "text-yellow-700 dark:text-yellow-400",
+    label: "Gold",
+  },
+  silver: {
+    bg: "bg-gray-100 dark:bg-gray-700/40",
+    text: "text-gray-600 dark:text-gray-300",
+    label: "Silver",
+  },
+  bronze: {
+    bg: "bg-orange-100 dark:bg-orange-900/40",
+    text: "text-orange-700 dark:text-orange-400",
+    label: "Bronze",
+  },
 };
 
 export function BadgeIcon({
