@@ -36,6 +36,8 @@ export function Notes({ topic }: NotesProps) {
     saveStickyNotes(topic.id, value);
     setShowToast(true);
     setTimeout(() => setShowToast(false), 2000);
+    // Let BlurtBox know we updated
+    window.dispatchEvent(new CustomEvent("notes-updated", { detail: { topicId: topic.id, source: "notes" } }));
   }, [topic.id]);
 
   useEffect(() => {
@@ -45,6 +47,17 @@ export function Notes({ topic }: NotesProps) {
     }, 1000);
     return () => clearTimeout(timeout);
   }, [userNotes, handleSave]);
+
+  // Sync from BlurtBox when it saves
+  useEffect(() => {
+    const handler = (e: CustomEvent<{ topicId: string; source: string }>) => {
+      if (e.detail.topicId === topic.id && e.detail.source === "blurtbox") {
+        setUserNotes(getStickyNotes(topic.id));
+      }
+    };
+    window.addEventListener("notes-updated", handler as EventListener);
+    return () => window.removeEventListener("notes-updated", handler as EventListener);
+  }, [topic.id]);
 
   return (
     <motion.div

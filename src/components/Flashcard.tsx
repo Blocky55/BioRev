@@ -331,10 +331,10 @@ export function Flashcard({ topic }: FlashcardProps) {
           onChange={(e) => setAnswerText(e.target.value)}
           onClick={(e) => e.stopPropagation()}
           placeholder="Type your answer here before flipping..."
-          className="w-full px-3 py-2.5 text-[14px] text-text-primary bg-surface-secondary
-            rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20
+          className="w-full px-4 py-3 text-[15px] sm:text-[15px] leading-relaxed text-text-primary bg-surface-secondary
+            rounded-xl border border-border focus:outline-none focus:ring-2 focus:ring-primary/20
             focus:border-primary placeholder:text-text-muted transition-all resize-none"
-          rows={2}
+          rows={4}
         />
       </div>
 
