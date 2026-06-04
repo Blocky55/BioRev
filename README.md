@@ -1,6 +1,6 @@
 # BioRevise
 
-An interactive biology revision web app built for UCIL exam prep. Covers six core topics with flashcards, quizzes, lecture notes, and progress tracking — all running locally in the browser with no account required.
+An interactive biology revision web app built for UCIL exam prep. Covers six core topics with flashcards, quizzes, lecture notes, and progress tracking running locally in the browser with no account required.
 
 ## Topics
 
@@ -16,15 +16,15 @@ An interactive biology revision web app built for UCIL exam prep. Covers six cor
 ### Study Tools
 
 - **Flashcards** — 87 cards across all topics with flip animations and a built-in answer scratchpad for self-testing
-- **Quizzes** — 183 multiple-choice questions with three modes: study all, retry missed, or random selection
+- **Quizzes** — 183 multiple-choice questions with three modes.
 - **Lecture Notes** — structured key topics and summaries for each topic
 
-### Clawd — Your Study Companion
+### Clawd — Your Study BRO Companion
 
-Clawd is an animated mascot that lives in the bottom-right corner of the screen. He reacts to your progress and provides contextual help:
+He is an animated mascot that lives in the bottom-right corner of the screen. He reacts to your progress and provides contextual help if you want.
 
 - **Tailored hints** — every single flashcard and quiz question has its own unique hint derived from the learning material. Click "Ask Clawd" for a nudge in the right direction (limited to one hint per card to encourage active recall)
-- **Mood-based animations** — 6 moods (idle, thinking, happy, sad, excited, sleeping) with distinct SVG expressions and Framer Motion animations
+- **Mood-based animations** — 6 moods with distinct SVG expressions and Framer Motion animations
 - **Reactive behaviour** — celebrates correct answers, commiserates wrong ones, and cheers streak milestones
 - **Speech bubble** — styled with a triangular SVG tail and spring entrance animation
 
@@ -40,7 +40,7 @@ Clawd is an animated mascot that lives in the bottom-right corner of the screen.
 
 - **Dark mode** — system-aware toggle with FOUC prevention; uses CSS custom properties in RGB channel format for opacity modifier support
 - **Responsive design** — fully optimised for mobile, tablet, and desktop with touch-friendly controls
-- **Persistent tab state** — Notes, Flashcards, and Quiz tabs all stay mounted so you never lose your place
+- **Persistent tab state** — Notes, Flashcards, and Quiz tabs all stay mounted
 
 ## Tech Stack
 
@@ -53,12 +53,7 @@ Clawd is an animated mascot that lives in the bottom-right corner of the screen.
 
 ## Getting Started
 
-```bash
-npm install
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) to start revising.
+click the link
 
 ## Project Structure
 
