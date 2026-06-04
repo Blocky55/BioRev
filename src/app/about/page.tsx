@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 /*
  * ============================================================
@@ -10,12 +11,23 @@ import { motion } from "framer-motion";
  * ============================================================
  */
 
-// ── Profile picture ──
-// Replace this URL with your own image (hosted anywhere).
-// Recommended: square image, at least 200x200px.
-const PROFILE_IMAGE_URL = "/profile.webp";
+// ── Profile pictures ──
+// These rotate every 5 seconds. Add or remove entries as you like.
+const PROFILE_IMAGES = [
+  "/profile-face.jpeg",
+  "/profile.webp",
+];
 
 export default function AboutPage() {
+  const [imageIndex, setImageIndex] = useState(0);
+
+  // Rotate profile picture every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setImageIndex((prev) => (prev + 1) % PROFILE_IMAGES.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
   return (
     <div className="px-4 sm:px-6 lg:px-10 py-6 sm:py-8 max-w-[700px] mx-auto">
       {/* Page header */}
@@ -50,16 +62,22 @@ export default function AboutPage() {
           {/* Profile picture + intro */}
           <div className="flex flex-col sm:flex-row gap-5 items-start">
             {/* ── Profile image ──
-             *  Change PROFILE_IMAGE_URL at the top of this file
-             *  to swap the placeholder for your own photo. */}
+             *  Rotates between images in PROFILE_IMAGES array every 5s.
+             *  Edit the array at the top of this file to change photos. */}
             <div className="flex-shrink-0 mx-auto sm:mx-0">
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl border-2 border-border overflow-hidden bg-surface-secondary">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={PROFILE_IMAGE_URL}
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl border-2 border-border overflow-hidden bg-surface-secondary relative">
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={imageIndex}
+                    src={PROFILE_IMAGES[imageIndex]}
+                    alt="Profile"
+                    className="w-full h-full object-cover absolute inset-0"
+                    initial={{ opacity: 0, scale: 1.05 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.5 }}
+                  />
+                </AnimatePresence>
               </div>
             </div>
 

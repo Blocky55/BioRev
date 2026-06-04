@@ -55,6 +55,7 @@ export function Navbar() {
     { label: "Topics", href: "#topics" },
     { label: "Study Plan", href: "#plan" },
     { label: "Progress", href: "#progress" },
+    { label: "About", href: "/about" },
   ];
 
   return (

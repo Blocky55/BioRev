@@ -390,6 +390,23 @@ export default function Home() {
           </motion.div>
         </section>
 
+        {/* Manga panel */}
+        <section className="pb-16 sm:pb-24">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7, duration: 0.4 }}
+            className="rounded-2xl overflow-hidden border border-border shadow-md"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/manga-panel.jpg"
+              alt="Manga panel"
+              className="w-full h-auto object-cover"
+            />
+          </motion.div>
+        </section>
+
         {/* Footer */}
         <footer className="py-8 sm:py-10 safe-bottom">
           <div className="bio-divider mb-8 sm:mb-10" />
