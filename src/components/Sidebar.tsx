@@ -200,6 +200,40 @@ export function Sidebar() {
               </Link>
             );
           })}
+
+          {/* About link */}
+          <div className="pt-2 mt-2 border-t border-border">
+            <Link
+              href="/about"
+              onClick={() => setIsOpen(false)}
+              className={`flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-lg transition-all duration-150
+                ${pathname === "/about"
+                  ? "bg-primary-light text-primary"
+                  : "text-text-secondary hover:bg-surface-secondary hover:text-text-primary active:bg-surface-secondary"
+                }`}
+            >
+              <div
+                className={`w-8 h-8 sm:w-7 sm:h-7 rounded-md flex items-center justify-center flex-shrink-0 ${
+                  pathname === "/about"
+                    ? "bg-primary text-white"
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400"
+                }`}
+              >
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.3" />
+                  <path d="M8 7v4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+                  <circle cx="8" cy="5" r="0.75" fill="currentColor" />
+                </svg>
+              </div>
+              <span
+                className={`text-[14px] sm:text-[13px] font-medium ${
+                  pathname === "/about" ? "text-primary" : ""
+                }`}
+              >
+                About
+              </span>
+            </Link>
+          </div>
         </nav>
 
         {/* Footer */}

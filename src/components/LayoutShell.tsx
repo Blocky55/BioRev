@@ -9,13 +9,14 @@ import { ToastProvider } from "./Toast";
 export function LayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isTopicPage = pathname.startsWith("/topic/");
+  const hasSidebar = isTopicPage || pathname === "/about";
 
   return (
     <ToastProvider>
-      {isTopicPage && <Sidebar />}
+      {hasSidebar && <Sidebar />}
       <main
         className={`relative z-[1] ${
-          isTopicPage
+          hasSidebar
             ? "lg:ml-[260px] min-h-screen pt-14 lg:pt-0"
             : "min-h-screen"
         }`}
