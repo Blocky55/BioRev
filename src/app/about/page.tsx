@@ -13,7 +13,7 @@ import { motion } from "framer-motion";
 // ── Profile picture ──
 // Replace this URL with your own image (hosted anywhere).
 // Recommended: square image, at least 200x200px.
-const PROFILE_IMAGE_URL = "https://drive.google.com/uc?id=10QId8L9qzwKts2e0Lh3PwGEMRWPv_Djc";
+const PROFILE_IMAGE_URL = "/profile.webp";
 
 export default function AboutPage() {
   return (
