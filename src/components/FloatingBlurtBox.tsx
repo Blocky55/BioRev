@@ -11,7 +11,6 @@ interface FloatingBlurtBoxProps {
   onClose: () => void;
 }
 
-const MAX_CHARS = 2000;
 const MIN_HEIGHT = 160;
 const MAX_HEIGHT_VH = 0.4; // 40vh
 const DEFAULT_HEIGHT = 200;
@@ -78,7 +77,13 @@ export function FloatingBlurtBox({
   useEffect(() => {
     if (!hasLoadedRef.current) return;
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-    saveTimerRef.current = setTimeout(() => handleSave(notes), 800);
+    saveTimerRef.current = setTimeout(() => {
+      // Preserve scroll position during save
+      const ta = textareaRef.current;
+      const scrollTop = ta?.scrollTop ?? 0;
+      handleSave(notes);
+      if (ta) requestAnimationFrame(() => { ta.scrollTop = scrollTop; });
+    }, 10000);
     return () => {
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     };
@@ -240,7 +245,7 @@ export function FloatingBlurtBox({
 
                 {/* Char count */}
                 <span className="text-[10px] text-text-muted tabular-nums">
-                  {notes.length}/{MAX_CHARS}
+                  {notes.length} chars
                 </span>
 
                 {/* Close */}
@@ -268,10 +273,9 @@ export function FloatingBlurtBox({
               <textarea
                 ref={textareaRef}
                 value={notes}
-                onChange={(e) => {
-                  if (e.target.value.length <= MAX_CHARS) {
-                    setNotes(e.target.value);
-                  }
+                onChange={(e) => setNotes(e.target.value)}
+                onBlur={() => {
+                  if (hasLoadedRef.current) handleSave(notes);
                 }}
                 placeholder="Blurt your thoughts here... key terms, connections, anything."
                 className="w-full h-full text-[14px] leading-relaxed text-text-primary

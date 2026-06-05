@@ -26,7 +26,7 @@ export function Notes({ topic }: NotesProps) {
   const [showToast, setShowToast] = useState(false);
   const [blurtOpen, setBlurtOpen] = useState(false);
   const hasLoadedRef = useRef(false);
-  const MAX_CHARS = 2000;
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     hasLoadedRef.current = false;
@@ -44,8 +44,12 @@ export function Notes({ topic }: NotesProps) {
   useEffect(() => {
     if (!hasLoadedRef.current) return;
     const timeout = setTimeout(() => {
+      // Preserve scroll position during save to prevent cursor jumping
+      const ta = textareaRef.current;
+      const scrollTop = ta?.scrollTop ?? 0;
       handleSave(userNotes);
-    }, 1000);
+      if (ta) requestAnimationFrame(() => { ta.scrollTop = scrollTop; });
+    }, 10000);
     return () => clearTimeout(timeout);
   }, [userNotes, handleSave]);
 
@@ -127,11 +131,11 @@ export function Notes({ topic }: NotesProps) {
           </div>
           <div className="bg-surface rounded-xl border border-border overflow-hidden">
             <textarea
+              ref={textareaRef}
               value={userNotes}
-              onChange={(e) => {
-                if (e.target.value.length <= MAX_CHARS) {
-                  setUserNotes(e.target.value);
-                }
+              onChange={(e) => setUserNotes(e.target.value)}
+              onBlur={() => {
+                if (hasLoadedRef.current) handleSave(userNotes);
               }}
               placeholder="Type your personal notes here... They auto-save."
               className="w-full h-36 sm:h-40 p-3.5 sm:p-4 text-[14px] text-text-primary bg-transparent rounded-xl resize-none
@@ -141,7 +145,7 @@ export function Notes({ topic }: NotesProps) {
           </div>
           <div className="flex justify-between items-center mt-2 px-1">
             <span className="text-[11px] sm:text-[12px] text-text-muted">
-              {userNotes.length}/{MAX_CHARS}
+              {userNotes.length} chars
             </span>
             <AnimatePresence>
               {showToast && (
