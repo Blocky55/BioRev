@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ClawdSprite } from "@/components/ClawdSprite";
 
 /*
  * ============================================================
@@ -110,20 +111,13 @@ export default function AboutPage() {
           </div>
 
           <div className="flex items-start gap-4">
-            {/* Clawd mini icon */}
-            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-primary-light flex items-center justify-center">
-              <svg width="32" height="32" viewBox="0 0 56 56" fill="none">
-                <circle cx="28" cy="32" r="14" fill="#047857" />
-                <circle cx="23" cy="29" r="3" fill="white" />
-                <circle cx="33" cy="29" r="3" fill="white" />
-                <circle cx="24" cy="28" r="1.5" fill="#111827" />
-                <circle cx="34" cy="28" r="1.5" fill="#111827" />
-                <path d="M23 36 Q28 40 33 36" stroke="white" strokeWidth="1.3" fill="none" strokeLinecap="round" />
-              </svg>
+            {/* Clawd nerd sprite */}
+            <div className="flex-shrink-0">
+              <ClawdSprite sprite="nerd" size={64} animation="wiggle" delay={0.2} />
             </div>
 
             {/* ── Clawdy copy (EDIT HERE) ── */}
-            <p className="text-[14px] text-text-primary leading-relaxed">
+            <p className="text-[14px] text-text-primary leading-relaxed pt-2">
               He&apos;ll help you throughout your revision if you don&apos;t mind. Bro&apos;s a little weird but he means well.
             </p>
           </div>
@@ -155,16 +149,19 @@ export default function AboutPage() {
             </p>
           </div>
 
-          {/* Tech badges */}
-          <div className="flex flex-wrap gap-2 mt-4">
-            {["Next.js 14", "TypeScript", "Tailwind CSS", "Framer Motion"].map((tech) => (
-              <span
-                key={tech}
-                className="text-[11px] font-medium text-text-secondary bg-surface-secondary px-2.5 py-1 rounded-md"
-              >
-                {tech}
-              </span>
-            ))}
+          {/* Tech badges + builder Clawd */}
+          <div className="flex items-end justify-between mt-4">
+            <div className="flex flex-wrap gap-2">
+              {["Next.js 14", "TypeScript", "Tailwind CSS", "Framer Motion"].map((tech) => (
+                <span
+                  key={tech}
+                  className="text-[11px] font-medium text-text-secondary bg-surface-secondary px-2.5 py-1 rounded-md"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+            <ClawdSprite sprite="builder" size={48} animation="float-slow" delay={0.3} />
           </div>
         </motion.div>
 

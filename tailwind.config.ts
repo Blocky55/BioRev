@@ -61,6 +61,9 @@ const config: Config = {
         "float-slow": "float 8s ease-in-out infinite",
         "pulse-soft": "pulse-soft 4s ease-in-out infinite",
         "helix-spin": "helix-spin 20s linear infinite",
+        "bounce-slow": "bounce-slow 3s ease-in-out infinite",
+        "wobble": "wobble 4s ease-in-out infinite",
+        "wiggle": "wiggle 2.5s ease-in-out infinite",
       },
       keyframes: {
         float: {
@@ -74,6 +77,20 @@ const config: Config = {
         "helix-spin": {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
+        },
+        "bounce-slow": {
+          "0%, 100%": { transform: "translateY(0) scale(1)" },
+          "50%": { transform: "translateY(-6px) scale(1.03)" },
+        },
+        "wobble": {
+          "0%, 100%": { transform: "rotate(0deg)" },
+          "25%": { transform: "rotate(-3deg)" },
+          "75%": { transform: "rotate(3deg)" },
+        },
+        "wiggle": {
+          "0%, 100%": { transform: "rotate(0deg) translateX(0)" },
+          "25%": { transform: "rotate(-2deg) translateX(-2px)" },
+          "75%": { transform: "rotate(2deg) translateX(2px)" },
         },
       },
     },

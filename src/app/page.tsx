@@ -15,6 +15,7 @@ import {
 import { BadgeIcon } from "@/components/Badge";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { Navbar } from "@/components/Navbar";
+import { ClawdSprite } from "@/components/ClawdSprite";
 
 interface TopicStats {
   flashcardKnown: number;
@@ -126,7 +127,12 @@ export default function Home() {
 
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-10">
         {/* Hero */}
-        <section className="pt-24 pb-14 sm:pt-28 sm:pb-16 lg:pt-40 lg:pb-28">
+        <section className="pt-24 pb-14 sm:pt-28 sm:pb-16 lg:pt-40 lg:pb-28 relative">
+          {/* Greeting Clawd — floats to the right of hero text */}
+          <div className="hidden md:block absolute right-4 lg:right-10 top-32 lg:top-44">
+            <ClawdSprite sprite="greeting" size={100} animation="float" delay={0.6} title="Clawd says hi!" />
+          </div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -161,7 +167,7 @@ export default function Home() {
         </section>
 
         {/* Stats — 3 cards */}
-        <section id="progress" className="scroll-mt-20 sm:scroll-mt-24 pb-14 sm:pb-20">
+        <section id="progress" className="scroll-mt-20 sm:scroll-mt-24 pb-14 sm:pb-20 relative">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -191,12 +197,19 @@ export default function Home() {
               <p className="text-[12px] sm:text-[13px] text-text-muted mt-1">Badges earned</p>
             </div>
           </motion.div>
+          {/* Flex Clawd cheering you on */}
+          <div className="hidden lg:block absolute -right-2 top-1/2 -translate-y-1/2">
+            <ClawdSprite sprite="flex" size={56} animation="bounce-slow" delay={0.4} />
+          </div>
         </section>
 
         {/* Topics */}
         <section id="topics" className="scroll-mt-20 sm:scroll-mt-24 pb-16 sm:pb-24">
           <div className="mb-6 sm:mb-8">
-            <h2 className="text-xl sm:text-2xl font-bold text-text-primary">Topics</h2>
+            <div className="flex items-center gap-3">
+              <h2 className="text-xl sm:text-2xl font-bold text-text-primary">Topics</h2>
+              <ClawdSprite sprite="science" size={40} animation="wobble" delay={0.3} />
+            </div>
             <p className="text-[14px] sm:text-base text-text-secondary mt-1">
               Six topics to master. Pick one to start revising.
             </p>
@@ -332,9 +345,12 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.4 }}
           >
-            <h2 className="text-xl sm:text-2xl font-bold text-text-primary mb-1">
-              Study plan
-            </h2>
+            <div className="flex items-center gap-3 mb-1">
+              <h2 className="text-xl sm:text-2xl font-bold text-text-primary">
+                Study plan
+              </h2>
+              <ClawdSprite sprite="idea" size={38} animation="float-slow" delay={0.6} />
+            </div>
             <p className="text-[14px] sm:text-base text-text-secondary mb-6 sm:mb-8">
               A two-week rotation. Odd topics get 2 days, even topics get 1 day.
             </p>

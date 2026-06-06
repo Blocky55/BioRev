@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Topic } from "@/lib/topics";
 import { getStickyNotes, saveStickyNotes } from "@/lib/progress";
 import { FloatingBlurtBox } from "@/components/FloatingBlurtBox";
+import { ClawdSprite } from "@/components/ClawdSprite";
 
 interface NotesProps {
   topic: Topic;
@@ -128,6 +129,7 @@ export function Notes({ topic }: NotesProps) {
             <h3 className="text-[13px] font-semibold text-text-secondary uppercase tracking-wide">
               Your Notes
             </h3>
+            <ClawdSprite sprite="scroll" size={32} animation="float-slow" delay={0.4} />
           </div>
           <div className="bg-surface rounded-xl border border-border overflow-hidden">
             <textarea
